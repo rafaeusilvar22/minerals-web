@@ -39,7 +39,7 @@
           v-for="mineral in pagedMinerals"
           :key="mineral.id"
           :to="`/minerais/${mineral.id}`"
-          class="block transition-transform hover:-translate-y-0.5"
+          class="block min-w-0 transition-transform hover:-translate-y-0.5"
         >
           <MineralCard
             :name="mineral.name"
