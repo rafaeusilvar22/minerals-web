@@ -178,9 +178,9 @@
 </template>
 
 <script setup lang="ts">
+import type { Category } from "~/composables/useCategoriesStore";
 import type { Mineral } from "~/composables/useMineralsStore";
 import { Search } from "@lucide/vue";
-import { TransitionPresets, useTransition } from "@vueuse/core";
 
 useHead({
   title: "Dicionário de Minerais",
@@ -193,27 +193,33 @@ useHead({
   ],
 });
 
-const { minerals: allMinerals, getById: getMineralById } = useMineralsStore();
+interface HomeData {
+  minerals: Mineral[];
+  categories: Category[];
+  featuredMineralId: string | null;
+}
+
+const { data: home } = await useAsyncData("home", () => $fetch<HomeData>("/api/home"));
+
+const allMinerals = computed(() => home.value?.minerals ?? []);
+const allCategories = computed(() => home.value?.categories ?? []);
+
+function getCategoryBySlug(slug: string) {
+  return allCategories.value.find((category) => category.slug === slug);
+}
 
 const crystalSystemCount = computed(
   () => new Set(allMinerals.value.map((mineral) => mineral.crystalSystem).filter(Boolean)).size,
 );
 
-const countUpOptions = { duration: 1200, transition: TransitionPresets.easeOutExpo };
-const animatedMineralCount = useTransition(computed(() => allMinerals.value.length), countUpOptions);
-const animatedCrystalSystemCount = useTransition(crystalSystemCount, countUpOptions);
-
 const stats = computed(() => [
-  { value: `${Math.round(animatedMineralCount.value)}`, label: "minerais" },
-  { value: `${Math.round(animatedCrystalSystemCount.value)}`, label: "sistemas cristalinos" },
+  { value: `${allMinerals.value.length}`, label: "minerais" },
+  { value: `${crystalSystemCount.value}`, label: "sistemas cristalinos" },
   { value: "1–10", label: "Escala Mohs", prefix: true },
 ]);
 
-const { categories: allCategories, getBySlug: getCategoryBySlug } = useCategoriesStore();
-const { active: activeFeatured } = useFeaturedMineral();
-
 const featuredMineral = computed(() =>
-  activeFeatured.value ? getMineralById(activeFeatured.value.mineralId) : undefined,
+  allMinerals.value.find((mineral) => mineral.id === home.value?.featuredMineralId),
 );
 
 function formatHardness(mineral: Mineral) {
@@ -231,7 +237,7 @@ const categoryOptions = computed(() => [
 
 const filteredMinerals = computed(() => {
   const withoutFeatured = allMinerals.value.filter(
-    (mineral) => mineral.id !== activeFeatured.value?.mineralId,
+    (mineral) => mineral.id !== home.value?.featuredMineralId,
   );
 
   return selectedCategory.value === "todos"

@@ -5,7 +5,7 @@
       Voltar ao catálogo
     </NuxtLink>
 
-    <div v-if="loading" class="grid gap-10 lg:grid-cols-2 lg:gap-16">
+    <div v-if="pending" class="grid gap-10 lg:grid-cols-2 lg:gap-16">
       <Skeleton class="aspect-4/3 w-full rounded-2xl" />
       <div class="flex flex-col gap-4">
         <Skeleton class="h-4 w-24" />
@@ -15,18 +15,7 @@
       </div>
     </div>
 
-    <div v-else-if="!mineral" class="flex flex-col items-start gap-3 py-12">
-      <p class="text-body text-muted-foreground">
-        Mineral não encontrado.
-      </p>
-      <Button as-child variant="outline">
-        <NuxtLink to="/">
-          Voltar ao catálogo
-        </NuxtLink>
-      </Button>
-    </div>
-
-    <div v-else class="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
+    <div v-else-if="mineral" class="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
       <div class="flex flex-col gap-4">
         <Carousel v-if="mineral.images.length > 1" class="w-full">
           <CarouselContent>
@@ -93,14 +82,22 @@
 </template>
 
 <script setup lang="ts">
+import type { Mineral } from '~/composables/useMineralsStore'
 import { ArrowLeft } from '@lucide/vue'
 
 const route = useRoute()
+const mineralId = String(route.params.id)
 
-const { getById, loading } = useMineralsStore()
+const { data: mineral, pending } = await useAsyncData(
+  `mineral-${mineralId}`,
+  () => $fetch<Mineral>(`/api/minerals/${mineralId}`),
+)
+
+if (!pending.value && !mineral.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Mineral não encontrado.', fatal: true })
+}
+
 const { getBySlug: getCategoryBySlug } = useCategoriesStore()
-
-const mineral = computed(() => getById(String(route.params.id)))
 const category = computed(() => mineral.value ? getCategoryBySlug(mineral.value.categorySlug) : undefined)
 
 useHead({
