@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-6">
     <div class="flex flex-col gap-1">
-      <h1 class="text-section-title text-foreground">
+      <h1 class="text-section-title font-heading text-foreground">
         Novo mineral
       </h1>
       <p class="text-body text-muted-foreground">

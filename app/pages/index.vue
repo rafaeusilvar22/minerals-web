@@ -3,16 +3,55 @@
     class="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-cover bg-center"
     style="background-image: url('/images/ametista-background.webp');"
   >
-    <div class="absolute inset-0 bg-black/60" />
+    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/30" />
+    <div
+      class="absolute inset-0 opacity-30"
+      style="background: radial-gradient(circle at 50% 40%, var(--primary) 0%, transparent 65%);"
+    />
+
+    <svg
+      class="pointer-events-none absolute left-1/2 top-1/2 size-[820px] max-w-none -translate-x-1/2 -translate-y-1/2 text-white/15 motion-safe:animate-[spin_200s_linear_infinite]"
+      viewBox="0 0 600 600"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle cx="300" cy="300" r="300" stroke="currentColor" />
+      <circle cx="300" cy="300" r="260" stroke="currentColor" />
+      <polygon points="300,80 491,190 491,410 300,520 109,410 109,190" stroke="currentColor" />
+      <circle cx="300" cy="300" r="4" fill="currentColor" />
+      <g stroke="currentColor">
+        <line x1="300" y1="0" x2="300" y2="40" />
+        <line x1="450" y1="40.2" x2="438" y2="61" />
+        <line x1="559.8" y1="150" x2="539" y2="162" />
+        <line x1="600" y1="300" x2="560" y2="300" />
+        <line x1="559.8" y1="450" x2="539" y2="438" />
+        <line x1="450" y1="559.8" x2="438" y2="539" />
+        <line x1="300" y1="600" x2="300" y2="560" />
+        <line x1="150" y1="559.8" x2="162" y2="539" />
+        <line x1="40.2" y1="450" x2="61" y2="438" />
+        <line x1="0" y1="300" x2="40" y2="300" />
+        <line x1="40.2" y1="150" x2="61" y2="162" />
+        <line x1="150" y1="40.2" x2="162" y2="61" />
+      </g>
+    </svg>
+
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <span
+        v-for="sparkle in heroSparkles"
+        :key="sparkle.id"
+        class="absolute size-1 rounded-full bg-white shadow-[0_0_6px_2px_rgba(255,255,255,0.6)] motion-safe:animate-pulse"
+        :style="{ left: sparkle.left, top: sparkle.top, animationDelay: sparkle.delay, animationDuration: sparkle.duration }"
+      />
+    </div>
 
     <div class="relative z-10 mx-auto flex max-w-6xl flex-col items-center gap-8 px-4 py-16 text-center sm:py-24">
       <span
-        class="text-eyebrow font-mono uppercase tracking-[0.13em] text-white/90"
+        class="text-eyebrow font-heading uppercase tracking-[0.13em] text-white/90"
       >
         Dicionário de Minerais
       </span>
 
-      <h1 class="max-w-3xl text-hero text-white">
+      <h1 class="max-w-3xl text-hero font-heading text-white">
         Descubra a linguagem das pedras naturais
       </h1>
 
@@ -67,34 +106,36 @@
       :to="`/minerais/${featuredMineral.id}`"
       class="mx-auto grid max-w-6xl gap-10 px-4 py-12 transition-opacity hover:opacity-90 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-16"
     >
-      <div
-        class="relative flex aspect-4/3 items-center justify-center overflow-hidden rounded-2xl border border-border bg-muted"
-        :style="!featuredMineral.images.length ? {
-          backgroundImage: 'repeating-linear-gradient(135deg, var(--accent) 0px, var(--accent) 1px, transparent 1px, transparent 14px)',
-        } : undefined"
-      >
-        <img
-          v-if="featuredMineral.images.length"
-          :src="featuredMineral.images[0]"
-          :alt="featuredMineral.name"
-          class="size-full object-cover"
+      <div class="relative rounded-2xl bg-gradient-to-br from-gold via-primary/50 to-gold p-[2px]">
+        <div
+          class="relative flex aspect-4/3 items-center justify-center overflow-hidden rounded-[14px] bg-muted"
+          :style="!featuredMineral.images.length ? {
+            backgroundImage: 'repeating-linear-gradient(135deg, var(--accent) 0px, var(--accent) 1px, transparent 1px, transparent 14px)',
+          } : undefined"
         >
-        <span
-          v-else
-          class="text-eyebrow font-mono uppercase tracking-[0.13em] text-muted-foreground"
-        >
-          Foto · {{ featuredMineral.name }}
-        </span>
+          <img
+            v-if="featuredMineral.images.length"
+            :src="featuredMineral.images[0]"
+            :alt="featuredMineral.name"
+            class="size-full object-cover"
+          >
+          <span
+            v-else
+            class="text-eyebrow font-heading uppercase tracking-[0.13em] text-muted-foreground"
+          >
+            Foto · {{ featuredMineral.name }}
+          </span>
+        </div>
       </div>
 
       <div class="flex flex-col items-start gap-4">
         <span
-          class="text-eyebrow font-mono uppercase tracking-[0.13em] text-primary"
+          class="text-eyebrow font-heading uppercase tracking-[0.13em] text-gold"
         >
           Mineral do dia
         </span>
 
-        <h2 class="text-mineral-title text-foreground">{{ featuredMineral.name }}</h2>
+        <h2 class="text-mineral-title font-heading text-foreground">{{ featuredMineral.name }}</h2>
 
         <p class="font-mono text-body text-primary">{{ featuredMineral.formula }}</p>
 
@@ -131,13 +172,13 @@
   <section class="flex flex-col gap-6 py-12">
     <div class="flex items-end justify-between gap-4">
       <div class="flex flex-col gap-1">
-        <h2 class="text-section-title text-foreground">Catálogo</h2>
+        <h2 class="text-section-title font-heading text-foreground">Catálogo</h2>
         <p class="text-body text-muted-foreground">
           Navegue pela coleção de minerais e pedras naturais.
         </p>
       </div>
 
-      <Button variant="link" as-child class="shrink-0 px-0 text-primary">
+      <Button variant="link" as-child class="shrink-0 px-0 text-gold hover:text-primary">
         <NuxtLink to="/catalogo"> Ver todos → </NuxtLink>
       </Button>
     </div>
@@ -182,8 +223,17 @@ import type { Category } from "~/composables/useCategoriesStore";
 import type { Mineral } from "~/composables/useMineralsStore";
 import { Search } from "@lucide/vue";
 
+const heroSparkles = [
+  { id: 1, left: "18%", top: "22%", delay: "0s", duration: "3.4s" },
+  { id: 2, left: "82%", top: "18%", delay: "0.6s", duration: "4s" },
+  { id: 3, left: "72%", top: "62%", delay: "1.2s", duration: "3.8s" },
+  { id: 4, left: "12%", top: "68%", delay: "0.3s", duration: "3s" },
+  { id: 5, left: "50%", top: "12%", delay: "0.9s", duration: "4.2s" },
+  { id: 6, left: "90%", top: "45%", delay: "1.5s", duration: "3.6s" },
+];
+
 useHead({
-  title: "Dicionário de Minerais",
+  title: "Magia Cristais",
   meta: [
     {
       name: "description",

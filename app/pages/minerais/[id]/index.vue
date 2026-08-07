@@ -37,18 +37,18 @@
           } : undefined"
         >
           <img v-if="mineral.images.length" :src="mineral.images[0]" :alt="mineral.name" class="size-full object-cover">
-          <span v-else class="text-eyebrow font-mono uppercase tracking-[0.13em] text-muted-foreground">
+          <span v-else class="text-eyebrow font-heading uppercase tracking-[0.13em] text-muted-foreground">
             Foto · {{ mineral.name }}
           </span>
         </div>
       </div>
 
       <div class="flex flex-col items-start gap-4">
-        <span v-if="category" class="text-eyebrow font-mono uppercase tracking-[0.13em] text-primary">
+        <span v-if="category" class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
           {{ category.name }}
         </span>
 
-        <h1 class="text-mineral-title text-foreground">
+        <h1 class="text-mineral-title font-heading text-foreground">
           {{ mineral.name }}
         </h1>
 
@@ -101,7 +101,7 @@ const { getBySlug: getCategoryBySlug } = useCategoriesStore()
 const category = computed(() => mineral.value ? getCategoryBySlug(mineral.value.categorySlug) : undefined)
 
 useHead({
-  title: () => mineral.value ? `${mineral.value.name} · Dicionário de Minerais` : 'Mineral · Dicionário de Minerais',
+  title: () => mineral.value ? `${mineral.value.name} · Magia Cristais` : 'Mineral · Magia Cristais',
   meta: [
     {
       name: 'description',

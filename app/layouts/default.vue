@@ -1,5 +1,22 @@
 <template>
   <div class="flex min-h-screen flex-col">
+    <div class="pointer-events-none fixed inset-0 -z-10 text-foreground/[0.05]" aria-hidden="true">
+      <svg class="size-full" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="mineral-bg-pattern" width="200" height="200" patternUnits="userSpaceOnUse">
+            <polygon points="46,10 64,22 64,46 46,58 28,46 28,22" fill="none" stroke="currentColor" stroke-width="1" />
+            <polygon points="150,70 172,108 128,108" fill="none" stroke="currentColor" stroke-width="1" />
+            <polygon points="20,140 34,150 34,168 20,178 6,168 6,150" fill="none" stroke="currentColor" stroke-width="1" />
+            <circle cx="160" cy="25" r="1.5" fill="currentColor" />
+            <circle cx="100" cy="150" r="1.5" fill="currentColor" />
+            <circle cx="185" cy="150" r="1" fill="currentColor" />
+            <circle cx="75" cy="95" r="1" fill="currentColor" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#mineral-bg-pattern)" />
+      </svg>
+    </div>
+
     <header
       class="sticky top-0 z-40 border-b transition-colors"
       :class="isScrolled ? 'bg-background/70 backdrop-blur-md' : 'bg-background'"
@@ -89,7 +106,7 @@
           <div class="flex flex-col gap-2">
             <div class="flex items-center gap-2 font-semibold text-foreground">
               <Gem class="size-5 text-primary" />
-              <span>Petrário</span>
+              <span>Magia Cristais</span>
             </div>
             <p class="text-body text-muted-foreground">
               Dicionário de minerais e pedras naturais.
@@ -116,7 +133,7 @@
         <Separator class="my-8" />
 
         <p class="text-sm text-muted-foreground">
-          © {{ currentYear }} Petrário. Todos os direitos reservados.
+          © {{ currentYear }} Magia Cristais. Todos os direitos reservados.
         </p>
       </div>
     </footer>

@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-6 py-8">
     <div class="flex flex-col gap-1">
-      <h1 class="text-section-title text-foreground">
+      <h1 class="text-section-title font-heading text-foreground">
         Catálogo
       </h1>
       <p class="text-body text-muted-foreground">
@@ -78,7 +78,7 @@
 
 <script setup lang="ts">
 useHead({
-  title: "Catálogo · Dicionário de Minerais",
+  title: "Catálogo · Magia Cristais",
   meta: [
     {
       name: "description",

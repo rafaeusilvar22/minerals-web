@@ -71,6 +71,31 @@
         </div>
       </CardContent>
     </Card>
+
+    <Card class="max-w-3xl">
+      <CardHeader>
+        <CardTitle class="text-base">
+          Página Sobre
+        </CardTitle>
+        <CardDescription>
+          Estruture o conteúdo exibido na página pública "Sobre".
+        </CardDescription>
+      </CardHeader>
+      <CardContent class="flex flex-col gap-4">
+        <Skeleton v-if="!aboutInitialized" class="h-[268px] w-full rounded-lg" />
+        <RichTextEditor v-else v-model="aboutHtml" placeholder="Escreva sobre o projeto..." />
+
+        <p v-if="aboutError" class="text-sm text-destructive">
+          {{ aboutError }}
+        </p>
+
+        <div>
+          <Button :disabled="aboutSaving" @click="handleSaveAbout">
+            {{ aboutSaving ? 'Salvando...' : 'Salvar' }}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   </div>
 </template>
 
@@ -88,11 +113,24 @@ useHead({
 
 const { minerals, getById } = useMineralsStore()
 const { active, expiresAt, set, clear } = useFeaturedMineral()
+const { content: aboutContent, initialized: aboutInitialized, save: saveAbout } = useAboutContent()
 
 const selectedMineralId = ref('')
 const selectedDuration = ref<FeaturedMineralDuration>('1d')
 const saving = ref(false)
 const formError = ref('')
+
+const aboutHtml = ref('')
+const aboutSaving = ref(false)
+const aboutError = ref('')
+
+// Sincroniza só até o fetch inicial terminar — depois disso o form é a fonte
+// da verdade, senão um fetch tardio sobrescreveria o que o admin já digitou.
+const stopAboutSync = watch([aboutContent, aboutInitialized], ([value, ready]) => {
+  if (!ready) return
+  aboutHtml.value = value?.html ?? ''
+  stopAboutSync()
+}, { immediate: true })
 
 const activeMineral = computed(() => active.value ? getById(active.value.mineralId) : null)
 
@@ -140,6 +178,21 @@ async function handleClear() {
   }
   finally {
     saving.value = false
+  }
+}
+
+async function handleSaveAbout() {
+  aboutSaving.value = true
+  aboutError.value = ''
+
+  try {
+    await saveAbout(aboutHtml.value)
+  }
+  catch {
+    aboutError.value = 'Não foi possível salvar o conteúdo. Tente novamente.'
+  }
+  finally {
+    aboutSaving.value = false
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <Card class="w-full max-w-md">
     <CardHeader>
-      <CardTitle class="text-section-title">
+      <CardTitle class="text-section-title font-heading">
         Entrar
       </CardTitle>
       <CardDescription class="text-body">
