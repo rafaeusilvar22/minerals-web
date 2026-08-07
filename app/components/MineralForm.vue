@@ -62,6 +62,35 @@
     <Card>
       <CardHeader>
         <CardTitle class="text-base">
+          Estruturar com IA
+        </CardTitle>
+      </CardHeader>
+      <CardContent class="flex flex-col gap-3">
+        <Textarea
+          v-model="aiText"
+          placeholder="Cole ou escreva um texto livre sobre o minério (nome, composição, dureza, cor, sistema cristalino, curiosidades...) e deixe a IA preencher o formulário."
+          rows="4"
+        />
+        <div class="flex items-center justify-between gap-2">
+          <p v-if="aiError" class="text-sm text-destructive">
+            {{ aiError }}
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            class="ml-auto"
+            :disabled="aiLoading || !aiText.trim()"
+            @click="handleStructureWithAI"
+          >
+            {{ aiLoading ? 'Estruturando...' : 'Estruturar com IA' }}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card>
+      <CardHeader>
+        <CardTitle class="text-base">
           Informações básicas
         </CardTitle>
       </CardHeader>
@@ -342,6 +371,27 @@ async function onFilesSelected(event: Event) {
 
 function removeImage(index: number) {
   form.images.splice(index, 1)
+}
+
+const { structure, loading: aiLoading, error: aiError } = useMineralAI()
+const aiText = ref('')
+
+async function handleStructureWithAI() {
+  try {
+    const result = await structure(aiText.value, categories.value)
+
+    if (result.name) form.name = result.name
+    if (result.categorySlug) form.categorySlug = result.categorySlug
+    if (result.formula) form.formula = result.formula
+    if (result.hardnessMin) form.hardnessMin = result.hardnessMin
+    if (result.hardnessMax) form.hardnessMax = result.hardnessMax
+    if (result.crystalSystem) form.crystalSystem = result.crystalSystem
+    if (result.colors.length) form.colors = result.colors
+    if (result.description) form.description = result.description
+  }
+  catch {
+    // aiError já é preenchido pelo composable
+  }
 }
 
 function handleSubmit() {

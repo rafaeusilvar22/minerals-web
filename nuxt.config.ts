@@ -24,6 +24,7 @@ export default defineNuxtConfig({
     port: 3022,
   },
   runtimeConfig: {
+    groqApiKey: process.env.GROQ_API_KEY,
     public: {
       firebaseApiKey: process.env.NUXT_PUBLIC_FIREBASE_API_KEY,
       firebaseAuthDomain: process.env.NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
