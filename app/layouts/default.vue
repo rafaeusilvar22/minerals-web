@@ -23,11 +23,11 @@
     >
       <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <NuxtLink to="/" class="flex items-center">
-          <Gem class="size-5 text-primary" />
+          <img src="/images/logo-magia-cristais.png" alt="Magia Cristais" class="size-8">
         </NuxtLink>
 
         <NavigationMenu class="hidden md:flex">
-          <NavigationMenuList>
+          <NavigationMenuList class="gap-2">
             <NavigationMenuItem v-for="item in navItems" :key="item.to">
               <NavigationMenuLink as-child :active="route.path === item.to">
                 <NuxtLink :to="item.to">
@@ -105,7 +105,7 @@
         <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div class="flex flex-col gap-2">
             <div class="flex items-center gap-2 font-semibold text-foreground">
-              <Gem class="size-5 text-primary" />
+              <img src="/images/logo-magia-cristais.png" alt="Magia Cristais" class="size-6">
               <span>Magia Cristais</span>
             </div>
             <p class="text-body text-muted-foreground">
@@ -141,7 +141,7 @@
 </template>
 
 <script setup lang="ts">
-import { Gem, Menu, X } from '@lucide/vue'
+import { Menu, X } from '@lucide/vue'
 
 const route = useRoute()
 
@@ -188,7 +188,8 @@ const footerLinks = [
     title: 'Sobre',
     links: [
       { label: 'O projeto', to: '/sobre' },
-      { label: 'Contato', to: '/contato' },
+      // Oculto por enquanto — reativar quando a página de contato estiver pronta.
+      // { label: 'Contato', to: '/contato' },
     ],
   },
 ]

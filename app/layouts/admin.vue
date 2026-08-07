@@ -3,7 +3,7 @@
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <NuxtLink to="/" class="flex items-center gap-2 px-2 py-1.5">
-          <Gem class="size-5 shrink-0 text-primary" />
+          <img src="/images/logo-magia-cristais.png" alt="Magia Cristais" class="size-6 shrink-0">
           <span class="font-semibold text-foreground group-data-[collapsible=icon]:hidden">
             Magia Cristais
           </span>
@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { Diamond, ExternalLink, Gem, LayoutDashboard, LogOut, Settings, Tags, User } from '@lucide/vue'
+import { Diamond, ExternalLink, LayoutDashboard, LogOut, Settings, Tags, User } from '@lucide/vue'
 import { signOut } from 'firebase/auth'
 
 const route = useRoute()

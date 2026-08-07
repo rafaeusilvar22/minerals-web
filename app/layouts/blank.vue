@@ -3,7 +3,7 @@
     <header class="border-b">
       <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <NuxtLink to="/" class="flex items-center">
-          <Gem class="size-5 text-primary" />
+          <img src="/images/logo-magia-cristais.png" alt="Magia Cristais" class="size-8">
         </NuxtLink>
 
         <div class="flex items-center gap-1">
@@ -26,5 +26,5 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeft, Gem } from '@lucide/vue'
+import { ArrowLeft } from '@lucide/vue'
 </script>
