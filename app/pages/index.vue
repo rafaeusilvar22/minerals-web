@@ -180,6 +180,7 @@
 <script setup lang="ts">
 import type { Mineral } from "~/composables/useMineralsStore";
 import { Search } from "@lucide/vue";
+import { TransitionPresets, useTransition } from "@vueuse/core";
 
 useHead({
   title: "Dicionário de Minerais",
@@ -192,13 +193,22 @@ useHead({
   ],
 });
 
-const stats = [
-  { value: "120+", label: "minerais" },
-  { value: "8", label: "sistemas cristalinos" },
-  { value: "1–10", label: "Escala Mohs", prefix: true },
-];
-
 const { minerals: allMinerals, getById: getMineralById } = useMineralsStore();
+
+const crystalSystemCount = computed(
+  () => new Set(allMinerals.value.map((mineral) => mineral.crystalSystem).filter(Boolean)).size,
+);
+
+const countUpOptions = { duration: 1200, transition: TransitionPresets.easeOutExpo };
+const animatedMineralCount = useTransition(computed(() => allMinerals.value.length), countUpOptions);
+const animatedCrystalSystemCount = useTransition(crystalSystemCount, countUpOptions);
+
+const stats = computed(() => [
+  { value: `${Math.round(animatedMineralCount.value)}`, label: "minerais" },
+  { value: `${Math.round(animatedCrystalSystemCount.value)}`, label: "sistemas cristalinos" },
+  { value: "1–10", label: "Escala Mohs", prefix: true },
+]);
+
 const { categories: allCategories, getBySlug: getCategoryBySlug } = useCategoriesStore();
 const { active: activeFeatured } = useFeaturedMineral();
 

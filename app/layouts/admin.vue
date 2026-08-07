@@ -23,6 +23,15 @@
                   </NuxtLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+
+              <SidebarMenuItem>
+                <SidebarMenuButton as-child tooltip="Ver site">
+                  <a href="/" target="_blank" rel="noopener noreferrer">
+                    <ExternalLink />
+                    <span>Ver site</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -71,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { Diamond, Gem, LayoutDashboard, LogOut, Settings, Tags, User } from '@lucide/vue'
+import { Diamond, ExternalLink, Gem, LayoutDashboard, LogOut, Settings, Tags, User } from '@lucide/vue'
 import { signOut } from 'firebase/auth'
 
 const route = useRoute()
