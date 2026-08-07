@@ -9,6 +9,13 @@
       </p>
     </div>
 
+    <div v-if="searchQuery" class="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+      <span>Resultados para <span class="font-medium text-foreground">"{{ searchQuery }}"</span></span>
+      <NuxtLink to="/catalogo" class="text-gold hover:text-primary">
+        Limpar busca
+      </NuxtLink>
+    </div>
+
     <ToggleGroup
       v-model="selectedCategory"
       type="single"
@@ -31,7 +38,7 @@
 
     <template v-else>
       <p v-if="!pagedMinerals.length" class="py-12 text-center text-body text-muted-foreground">
-        Nenhum mineral encontrado nessa categoria.
+        {{ searchQuery ? `Nenhum mineral encontrado para "${searchQuery}".` : 'Nenhum mineral encontrado nessa categoria.' }}
       </p>
 
       <div v-else class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -77,6 +84,8 @@
 </template>
 
 <script setup lang="ts">
+import { normalizeSearchText } from "~/lib/utils";
+
 useHead({
   title: "Catálogo · Magia Cristais",
   meta: [
@@ -90,6 +99,9 @@ useHead({
 const { minerals: allMinerals, loading } = useMineralsStore();
 const { categories: allCategories, getBySlug: getCategoryBySlug } = useCategoriesStore();
 
+const route = useRoute();
+const searchQuery = computed(() => (typeof route.query.q === "string" ? route.query.q.trim() : ""));
+
 const selectedCategory = ref("todos");
 
 const categoryOptions = computed(() => [
@@ -97,16 +109,29 @@ const categoryOptions = computed(() => [
   ...allCategories.value.map((category) => ({ value: category.slug, label: category.name })),
 ]);
 
-const filteredMinerals = computed(() =>
-  selectedCategory.value === "todos"
+const filteredMinerals = computed(() => {
+  const byCategory = selectedCategory.value === "todos"
     ? allMinerals.value
-    : allMinerals.value.filter((mineral) => mineral.categorySlug === selectedCategory.value),
-);
+    : allMinerals.value.filter((mineral) => mineral.categorySlug === selectedCategory.value);
+
+  const query = normalizeSearchText(searchQuery.value);
+  if (!query) {
+    return byCategory;
+  }
+
+  return byCategory.filter((mineral) =>
+    normalizeSearchText([mineral.name, mineral.formula, ...mineral.colors].join(" ")).includes(query),
+  );
+});
 
 const PAGE_SIZE = 10;
 const currentPage = ref(1);
 
 watch(selectedCategory, () => {
+  currentPage.value = 1;
+});
+
+watch(searchQuery, () => {
   currentPage.value = 1;
 });
 

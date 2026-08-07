@@ -13,7 +13,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@lucide/vue": "^1.29.0",
+    "@lucide/vue": "^1.30.0",
     "@nuxtjs/color-mode": "^4.0.1",
     "@tanstack/vue-table": "^9.0.0",
     "@tiptap/extension-link": "^3.29.2",

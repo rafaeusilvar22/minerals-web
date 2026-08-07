@@ -1,41 +1,40 @@
 <template>
   <section
-    class="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-cover bg-center"
+    class="relative z-10 left-1/2 w-screen -translate-x-1/2 bg-cover bg-center"
     style="background-image: url('/images/ametista-background.webp');"
   >
-    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/30" />
-    <div
-      class="absolute inset-0 opacity-30"
-      style="background: radial-gradient(circle at 50% 40%, var(--primary) 0%, transparent 65%);"
-    />
+    <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/30" />
+      <div
+        class="absolute inset-0 opacity-30"
+        style="background: radial-gradient(circle at 50% 40%, var(--primary) 0%, transparent 65%);"
+      />
 
-    <svg
-      class="pointer-events-none absolute left-1/2 top-1/2 size-[820px] max-w-none -translate-x-1/2 -translate-y-1/2 text-white/15 motion-safe:animate-[spin_200s_linear_infinite]"
-      viewBox="0 0 600 600"
-      fill="none"
-      aria-hidden="true"
-    >
-      <circle cx="300" cy="300" r="300" stroke="currentColor" />
-      <circle cx="300" cy="300" r="260" stroke="currentColor" />
-      <polygon points="300,80 491,190 491,410 300,520 109,410 109,190" stroke="currentColor" />
-      <circle cx="300" cy="300" r="4" fill="currentColor" />
-      <g stroke="currentColor">
-        <line x1="300" y1="0" x2="300" y2="40" />
-        <line x1="450" y1="40.2" x2="438" y2="61" />
-        <line x1="559.8" y1="150" x2="539" y2="162" />
-        <line x1="600" y1="300" x2="560" y2="300" />
-        <line x1="559.8" y1="450" x2="539" y2="438" />
-        <line x1="450" y1="559.8" x2="438" y2="539" />
-        <line x1="300" y1="600" x2="300" y2="560" />
-        <line x1="150" y1="559.8" x2="162" y2="539" />
-        <line x1="40.2" y1="450" x2="61" y2="438" />
-        <line x1="0" y1="300" x2="40" y2="300" />
-        <line x1="40.2" y1="150" x2="61" y2="162" />
-        <line x1="150" y1="40.2" x2="162" y2="61" />
-      </g>
-    </svg>
+      <svg
+        class="absolute left-1/2 top-1/2 size-[820px] max-w-none -translate-x-1/2 -translate-y-1/2 text-white/15 motion-safe:animate-[spin_200s_linear_infinite]"
+        viewBox="0 0 600 600"
+        fill="none"
+      >
+        <circle cx="300" cy="300" r="300" stroke="currentColor" />
+        <circle cx="300" cy="300" r="260" stroke="currentColor" />
+        <polygon points="300,80 491,190 491,410 300,520 109,410 109,190" stroke="currentColor" />
+        <circle cx="300" cy="300" r="4" fill="currentColor" />
+        <g stroke="currentColor">
+          <line x1="300" y1="0" x2="300" y2="40" />
+          <line x1="450" y1="40.2" x2="438" y2="61" />
+          <line x1="559.8" y1="150" x2="539" y2="162" />
+          <line x1="600" y1="300" x2="560" y2="300" />
+          <line x1="559.8" y1="450" x2="539" y2="438" />
+          <line x1="450" y1="559.8" x2="438" y2="539" />
+          <line x1="300" y1="600" x2="300" y2="560" />
+          <line x1="150" y1="559.8" x2="162" y2="539" />
+          <line x1="40.2" y1="450" x2="61" y2="438" />
+          <line x1="0" y1="300" x2="40" y2="300" />
+          <line x1="40.2" y1="150" x2="61" y2="162" />
+          <line x1="150" y1="40.2" x2="162" y2="61" />
+        </g>
+      </svg>
 
-    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
       <span
         v-for="sparkle in heroSparkles"
         :key="sparkle.id"
@@ -60,22 +59,75 @@
         composições e histórias, reunidos em um só lugar.
       </p>
 
-      <div class="relative w-full max-w-xl">
-        <Search
-          class="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-        />
-        <Input
-          ref="searchInput"
-          type="text"
-          placeholder="Busque por nome, cor ou composição..."
-          class="h-14 rounded-2xl border-border bg-card pl-11 pr-14 text-body shadow-sm focus-visible:ring-2"
-        />
-        <kbd
-          class="absolute right-4 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md border border-border text-xs text-muted-foreground"
-        >
-          /
-        </kbd>
-      </div>
+      <Combobox
+        v-model:open="isSearchOpen"
+        :ignore-filter="true"
+        reset-search-term-on-select
+        class="relative w-full max-w-xl text-left"
+      >
+        <ComboboxAnchor as-child>
+          <div class="relative">
+            <Search
+              class="pointer-events-none absolute left-4 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground"
+            />
+            <ComboboxInput
+              ref="searchInput"
+              v-model="searchQuery"
+              placeholder="Busque por nome, cor ou composição..."
+              class="flex h-14 w-full rounded-2xl border border-border bg-card pl-11 pr-14 text-body text-foreground shadow-sm outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
+            />
+            <kbd
+              v-if="!searchQuery"
+              class="absolute right-4 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md border border-border text-xs text-muted-foreground"
+            >
+              /
+            </kbd>
+            <ComboboxCancel
+              v-else
+              aria-label="Limpar busca"
+              class="absolute right-4 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <X class="size-4" />
+            </ComboboxCancel>
+          </div>
+        </ComboboxAnchor>
+
+        <ComboboxList class="rounded-2xl border-border bg-card p-0 shadow-lg">
+          <ComboboxEmpty class="px-4 py-3 text-left text-sm text-muted-foreground">
+            Nenhum mineral encontrado para "{{ searchQuery.trim() }}".
+          </ComboboxEmpty>
+
+          <ComboboxItem
+            v-for="result in searchResults"
+            :key="result.id"
+            :value="result.id"
+            :text-value="result.name"
+            class="flex items-center gap-3 rounded-none px-4 py-2.5"
+            @select="goToMineral(result.id)"
+          >
+            <span
+              class="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted"
+              :style="!result.images.length ? {
+                backgroundImage: 'repeating-linear-gradient(135deg, var(--accent) 0px, var(--accent) 1px, transparent 1px, transparent 6px)',
+              } : undefined"
+            >
+              <img v-if="result.images.length" :src="result.images[0]" :alt="result.name" class="size-full object-cover">
+            </span>
+            <span class="flex min-w-0 flex-1 flex-col items-start">
+              <span class="truncate text-card-name text-foreground">{{ result.name }}</span>
+              <span class="truncate font-mono text-xs text-muted-foreground">{{ result.formula }}</span>
+            </span>
+          </ComboboxItem>
+
+          <NuxtLink
+            v-if="searchResults.length"
+            :to="{ path: '/catalogo', query: { q: searchQuery.trim() } }"
+            class="block border-t border-border px-4 py-2.5 text-left text-sm font-medium text-gold hover:text-primary"
+          >
+            Ver todos os resultados para "{{ searchQuery.trim() }}" →
+          </NuxtLink>
+        </ComboboxList>
+      </Combobox>
 
       <dl
         class="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-body text-white/80"
@@ -221,7 +273,17 @@
 <script setup lang="ts">
 import type { Category } from "~/composables/useCategoriesStore";
 import type { Mineral } from "~/composables/useMineralsStore";
-import { Search } from "@lucide/vue";
+import { useDebounceFn } from "@vueuse/core";
+import { Search, X } from "@lucide/vue";
+import { ComboboxInput } from "reka-ui";
+import {
+  Combobox,
+  ComboboxAnchor,
+  ComboboxCancel,
+  ComboboxEmpty,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
 
 const heroSparkles = [
   { id: 1, left: "18%", top: "22%", delay: "0s", duration: "3.4s" },
@@ -321,4 +383,48 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener("keydown", focusSearchOnSlash);
 });
+
+const searchQuery = ref("");
+const isSearchOpen = ref(false);
+
+const searchResults = ref<Mineral[]>([]);
+const isSearching = ref(false);
+let searchRequestId = 0;
+
+const runSearch = useDebounceFn(async (term: string) => {
+  const requestId = ++searchRequestId;
+  isSearching.value = true;
+
+  try {
+    const { results } = await $fetch<{ results: Mineral[] }>("/api/search", { query: { q: term } });
+    if (requestId === searchRequestId) {
+      searchResults.value = results;
+    }
+  }
+  finally {
+    if (requestId === searchRequestId) {
+      isSearching.value = false;
+    }
+  }
+}, 250);
+
+watch(searchQuery, (value) => {
+  const term = value.trim();
+  isSearchOpen.value = term.length > 0;
+
+  if (!term) {
+    searchRequestId += 1;
+    searchResults.value = [];
+    isSearching.value = false;
+    return;
+  }
+
+  runSearch(term);
+});
+
+function goToMineral(id: string) {
+  isSearchOpen.value = false;
+  searchQuery.value = "";
+  navigateTo(`/minerais/${id}`);
+}
 </script>
