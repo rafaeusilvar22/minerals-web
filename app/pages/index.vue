@@ -67,7 +67,7 @@
       >
         <ComboboxAnchor as-child>
           <div class="relative">
-            <Search
+            <LucideSearch
               class="pointer-events-none absolute left-4 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground"
             />
             <ComboboxInput
@@ -87,7 +87,7 @@
               aria-label="Limpar busca"
               class="absolute right-4 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
             >
-              <X class="size-4" />
+              <LucideX class="size-4" />
             </ComboboxCancel>
           </div>
         </ComboboxAnchor>
@@ -274,7 +274,6 @@
 import type { Category } from "~/composables/useCategoriesStore";
 import type { Mineral } from "~/composables/useMineralsStore";
 import { useDebounceFn } from "@vueuse/core";
-import { Search, X } from "@lucide/vue";
 import { ComboboxInput } from "reka-ui";
 import {
   Combobox,

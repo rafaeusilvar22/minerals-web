@@ -11,7 +11,7 @@
       </div>
 
       <Button @click="openCreateDialog">
-        <Plus class="size-4" />
+        <LucidePlus class="size-4" />
         Nova categoria
       </Button>
     </div>
@@ -26,7 +26,7 @@
             <TableHead class="text-right">
               Minerais
             </TableHead>
-            <TableHead class="w-10" />
+            <TableHead class="w-20" />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -45,7 +45,10 @@
                 <Skeleton class="h-4 w-6" />
               </TableCell>
               <TableCell>
-                <Skeleton class="size-8 rounded-md" />
+                <div class="flex justify-end gap-1">
+                  <Skeleton class="size-7 rounded-md" />
+                  <Skeleton class="size-7 rounded-md" />
+                </div>
               </TableCell>
             </TableRow>
           </template>
@@ -68,21 +71,14 @@
                 {{ mineralCountFor(category.slug) }}
               </TableCell>
               <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger as-child>
-                    <Button variant="ghost" size="icon-sm" aria-label="Ações da categoria">
-                      <MoreHorizontal class="size-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem @click="openEditDialog(category)">
-                      Editar
-                    </DropdownMenuItem>
-                    <DropdownMenuItem variant="destructive" @click="removeCategory(category.id)">
-                      Excluir
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <div class="flex justify-end gap-1">
+                  <Button variant="ghost" size="icon-sm" aria-label="Editar categoria" title="Editar" @click="openEditDialog(category)">
+                    <LucidePencil class="size-4" />
+                  </Button>
+                  <Button variant="destructive" size="icon-sm" aria-label="Excluir categoria" title="Excluir" @click="removeCategory(category.id)">
+                    <LucideTrash2 class="size-4" />
+                  </Button>
+                </div>
               </TableCell>
             </TableRow>
           </template>
@@ -138,7 +134,7 @@
                 :aria-pressed="form.color === option.value"
                 @click="form.color = option.value"
               >
-                <Check v-if="form.color === option.value" class="size-4 text-white" />
+                <LucideCheck v-if="form.color === option.value" class="size-4 text-white" />
               </button>
             </div>
           </div>
@@ -165,7 +161,6 @@
 
 <script setup lang="ts">
 import type { Category } from '~/composables/useCategoriesStore'
-import { Check, MoreHorizontal, Plus } from '@lucide/vue'
 
 definePageMeta({
   layout: 'admin',

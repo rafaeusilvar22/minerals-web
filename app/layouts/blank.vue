@@ -9,7 +9,7 @@
         <div class="flex items-center gap-1">
           <Button variant="ghost" size="sm" as-child>
             <NuxtLink to="/">
-              <ArrowLeft class="size-4" />
+              <LucideArrowLeft class="size-4" />
               Voltar
             </NuxtLink>
           </Button>
@@ -26,5 +26,4 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeft } from '@lucide/vue'
 </script>

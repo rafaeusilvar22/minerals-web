@@ -50,13 +50,13 @@
           <Drawer swipe-direction="right">
             <DrawerTrigger as-child>
               <Button variant="ghost" size="icon" class="md:hidden" aria-label="Abrir menu">
-                <Menu class="size-5" />
+                <LucideMenu class="size-5" />
               </Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerClose as-child>
                 <Button variant="ghost" size="icon" class="absolute top-3 right-3" aria-label="Fechar menu">
-                  <X class="size-4" />
+                  <LucideX class="size-4" />
                 </Button>
               </DrawerClose>
 
@@ -141,7 +141,6 @@
 </template>
 
 <script setup lang="ts">
-import { Menu, X } from '@lucide/vue'
 
 const route = useRoute()
 

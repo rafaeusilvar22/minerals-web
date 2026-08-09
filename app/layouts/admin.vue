@@ -2,8 +2,8 @@
   <SidebarProvider>
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <NuxtLink to="/" class="flex items-center gap-2 px-2 py-1.5">
-          <img src="/images/logo-magia-cristais.png" alt="Magia Cristais" class="size-6 shrink-0">
+        <NuxtLink to="/" class="flex items-center gap-2 px-2 py-1.5 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2!">
+          <img src="/images/logo-magia-cristais.png" alt="Magia Cristais" class="size-8 shrink-0 object-contain group-data-[collapsible=icon]:size-4">
           <span class="font-semibold text-foreground group-data-[collapsible=icon]:hidden">
             Magia Cristais
           </span>
@@ -27,7 +27,7 @@
               <SidebarMenuItem>
                 <SidebarMenuButton as-child tooltip="Ver site">
                   <a href="/" target="_blank" rel="noopener noreferrer">
-                    <ExternalLink />
+                    <LucideExternalLink />
                     <span>Ver site</span>
                   </a>
                 </SidebarMenuButton>
@@ -43,7 +43,7 @@
             <DropdownMenu>
               <DropdownMenuTrigger as-child>
                 <SidebarMenuButton tooltip="Conta">
-                  <User />
+                  <LucideUser />
                   <span v-if="isMounted && user" class="truncate group-data-[collapsible=icon]:hidden">
                     {{ user.email }}
                   </span>
@@ -56,7 +56,7 @@
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem @click="handleLogout">
-                  <LogOut />
+                  <LucideLogOut />
                   Sair
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { Diamond, ExternalLink, LayoutDashboard, LogOut, Settings, Tags, User } from '@lucide/vue'
+import { Diamond, LayoutDashboard, Settings, Tags } from '@lucide/vue'
 import { signOut } from 'firebase/auth'
 
 const route = useRoute()

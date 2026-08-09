@@ -10,7 +10,7 @@
         aria-label="Título"
         @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
       >
-        <Heading2 class="size-4" />
+        <LucideHeading2 class="size-4" />
       </Button>
       <Button
         type="button"
@@ -21,7 +21,7 @@
         aria-label="Subtítulo"
         @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
       >
-        <Heading3 class="size-4" />
+        <LucideHeading3 class="size-4" />
       </Button>
 
       <Separator orientation="vertical" class="mx-1 h-6" />
@@ -35,7 +35,7 @@
         aria-label="Negrito"
         @click="editor.chain().focus().toggleBold().run()"
       >
-        <Bold class="size-4" />
+        <LucideBold class="size-4" />
       </Button>
       <Button
         type="button"
@@ -46,7 +46,7 @@
         aria-label="Itálico"
         @click="editor.chain().focus().toggleItalic().run()"
       >
-        <Italic class="size-4" />
+        <LucideItalic class="size-4" />
       </Button>
 
       <Separator orientation="vertical" class="mx-1 h-6" />
@@ -60,7 +60,7 @@
         aria-label="Lista"
         @click="editor.chain().focus().toggleBulletList().run()"
       >
-        <List class="size-4" />
+        <LucideList class="size-4" />
       </Button>
       <Button
         type="button"
@@ -71,7 +71,7 @@
         aria-label="Lista numerada"
         @click="editor.chain().focus().toggleOrderedList().run()"
       >
-        <ListOrdered class="size-4" />
+        <LucideListOrdered class="size-4" />
       </Button>
       <Button
         type="button"
@@ -82,7 +82,7 @@
         aria-label="Citação"
         @click="editor.chain().focus().toggleBlockquote().run()"
       >
-        <Quote class="size-4" />
+        <LucideQuote class="size-4" />
       </Button>
 
       <Separator orientation="vertical" class="mx-1 h-6" />
@@ -96,7 +96,7 @@
         aria-label="Desfazer"
         @click="editor.chain().focus().undo().run()"
       >
-        <Undo2 class="size-4" />
+        <LucideUndo2 class="size-4" />
       </Button>
       <Button
         type="button"
@@ -107,7 +107,7 @@
         aria-label="Refazer"
         @click="editor.chain().focus().redo().run()"
       >
-        <Redo2 class="size-4" />
+        <LucideRedo2 class="size-4" />
       </Button>
     </div>
 
@@ -116,7 +116,6 @@
 </template>
 
 <script setup lang="ts">
-import { Bold, Heading2, Heading3, Italic, List, ListOrdered, Quote, Redo2, Undo2 } from "@lucide/vue";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import StarterKit from "@tiptap/starter-kit";

@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-8 py-8">
     <NuxtLink to="/" class="inline-flex w-fit items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">
-      <ArrowLeft class="size-4" />
+      <LucideArrowLeft class="size-4" />
       Voltar ao catálogo
     </NuxtLink>
 
@@ -83,7 +83,6 @@
 
 <script setup lang="ts">
 import type { Mineral } from '~/composables/useMineralsStore'
-import { ArrowLeft } from '@lucide/vue'
 
 const route = useRoute()
 const mineralId = String(route.params.id)

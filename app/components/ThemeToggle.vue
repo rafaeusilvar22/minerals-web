@@ -1,8 +1,8 @@
 <template>
   <Button variant="ghost" size="icon" aria-label="Alternar tema" @click="toggleTheme">
     <ClientOnly>
-      <Sun v-if="colorMode.value === 'dark'" class="size-5" />
-      <Moon v-else class="size-5" />
+      <LucideSun v-if="colorMode.value === 'dark'" class="size-5" />
+      <LucideMoon v-else class="size-5" />
       <template #fallback>
         <div class="size-5" />
       </template>
@@ -11,8 +11,6 @@
 </template>
 
 <script setup lang="ts">
-import { Moon, Sun } from '@lucide/vue'
-
 const colorMode = useColorMode()
 
 function toggleTheme() {

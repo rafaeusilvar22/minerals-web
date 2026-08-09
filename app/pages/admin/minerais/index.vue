@@ -12,7 +12,7 @@
 
       <Button as-child>
         <NuxtLink to="/admin/minerais/novo">
-          <Plus class="size-4" />
+          <LucidePlus class="size-4" />
           Novo mineral
         </NuxtLink>
       </Button>
@@ -28,7 +28,7 @@
             <TableHead class="text-right">
               Dureza (Mohs)
             </TableHead>
-            <TableHead class="w-10" />
+            <TableHead class="w-20" />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -47,7 +47,10 @@
                 <Skeleton class="h-4 w-6" />
               </TableCell>
               <TableCell>
-                <Skeleton class="size-8 rounded-md" />
+                <div class="flex justify-end gap-1">
+                  <Skeleton class="size-7 rounded-md" />
+                  <Skeleton class="size-7 rounded-md" />
+                </div>
               </TableCell>
             </TableRow>
           </template>
@@ -73,23 +76,16 @@
                 {{ formatHardness(mineral) }}
               </TableCell>
               <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger as-child>
-                    <Button variant="ghost" size="icon-sm" aria-label="Ações do mineral">
-                      <MoreHorizontal class="size-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem as-child>
-                      <NuxtLink :to="`/admin/minerais/${mineral.id}/editar`">
-                        Editar
-                      </NuxtLink>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem variant="destructive" @click="remove(mineral.id)">
-                      Excluir
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <div class="flex justify-end gap-1">
+                  <Button variant="ghost" size="icon-sm" aria-label="Editar mineral" title="Editar" as-child>
+                    <NuxtLink :to="`/admin/minerais/${mineral.id}/editar`">
+                      <LucidePencil class="size-4" />
+                    </NuxtLink>
+                  </Button>
+                  <Button variant="destructive" size="icon-sm" aria-label="Excluir mineral" title="Excluir" @click="remove(mineral.id)">
+                    <LucideTrash2 class="size-4" />
+                  </Button>
+                </div>
               </TableCell>
             </TableRow>
           </template>
@@ -101,7 +97,6 @@
 
 <script setup lang="ts">
 import type { Mineral } from '~/composables/useMineralsStore'
-import { MoreHorizontal, Plus } from '@lucide/vue'
 
 definePageMeta({
   layout: 'admin',

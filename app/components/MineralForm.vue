@@ -13,7 +13,7 @@
           :disabled="uploading"
           @click="fileInput?.click()"
         >
-          <Upload class="size-6 text-muted-foreground" />
+          <LucideUpload class="size-6 text-muted-foreground" />
           <span class="text-body text-muted-foreground">
             {{ uploading ? 'Enviando imagens...' : 'Clique para selecionar uma ou mais imagens' }}
           </span>
@@ -41,7 +41,7 @@
               aria-label="Remover imagem"
               @click="removeImage(index)"
             >
-              <X class="size-3.5" />
+              <LucideX class="size-3.5" />
             </button>
           </div>
 
@@ -201,7 +201,7 @@
             <Badge v-for="color in form.colors" :key="color" variant="secondary" class="gap-1 pr-1.5">
               {{ color }}
               <button type="button" aria-label="Remover cor" class="cursor-pointer" @click="removeColor(color)">
-                <X class="size-3" />
+                <LucideX class="size-3" />
               </button>
             </Badge>
           </div>
@@ -248,7 +248,6 @@
 
 <script setup lang="ts">
 import type { Mineral } from '~/composables/useMineralsStore'
-import { Upload, X } from '@lucide/vue'
 
 const props = withDefaults(defineProps<{
   initialValue?: Omit<Mineral, 'id'>
