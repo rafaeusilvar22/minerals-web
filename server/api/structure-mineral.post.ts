@@ -22,7 +22,7 @@ const COLOR_PALETTE = ['Amarelo', 'Azul', 'Branco', 'Cinza', 'Dourado', 'Incolor
 
 const ELEMENTS = ['Fogo', 'Terra', 'Ar', 'Água']
 
-const PLANETS = ['Sol', 'Lua', 'Mercúrio', 'Vênus', 'Marte', 'Júpiter', 'Saturno']
+const PLANETS = ['Sol', 'Lua', 'Terra', 'Mercúrio', 'Vênus', 'Marte', 'Júpiter', 'Saturno', 'Urano', 'Netuno', 'Plutão', 'Quíron']
 
 const ZODIAC_SIGNS = ['Áries', 'Touro', 'Gêmeos', 'Câncer', 'Leão', 'Virgem', 'Libra', 'Escorpião', 'Sagitário', 'Capricórnio', 'Aquário', 'Peixes']
 

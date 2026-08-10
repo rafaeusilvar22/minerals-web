@@ -415,7 +415,7 @@ const { categories } = useCategoriesStore()
 
 const elements = ['Fogo', 'Terra', 'Ar', 'Água']
 
-const planets = ['Sol', 'Lua', 'Mercúrio', 'Vênus', 'Marte', 'Júpiter', 'Saturno']
+const planets = ['Sol', 'Lua', 'Terra', 'Mercúrio', 'Vênus', 'Marte', 'Júpiter', 'Saturno', 'Urano', 'Netuno', 'Plutão', 'Quíron']
 
 const zodiacSignOptions = [
   'Áries',
