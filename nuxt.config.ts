@@ -21,11 +21,17 @@ export default defineNuxtConfig({
       ],
     },
   },
-  modules: ['@nuxtjs/color-mode', 'shadcn-nuxt', 'nuxt-lucide-icons', '@nuxt/image'],
+  modules: ['@nuxtjs/color-mode', 'shadcn-nuxt', 'nuxt-lucide-icons', '@nuxt/image', '@nuxt/fonts'],
   css: ['~/assets/css/tailwind.css'],
   vite: {
     plugins: [
       tailwindcss(),
+    ],
+  },
+  fonts: {
+    families: [
+      { name: 'Geist', weights: [400, 500, 600, 700] },
+      { name: 'Dosis' },
     ],
   },
   image: {
