@@ -50,7 +50,6 @@
         >
           <MineralCard
             :name="mineral.name"
-            :formula="mineral.formula"
             :description="mineral.description"
             :dot-color="getCategoryBySlug(mineral.categorySlug)?.dotColor ?? 'var(--muted-foreground)'"
             :image="mineral.images[0]"
@@ -120,7 +119,7 @@ const filteredMinerals = computed(() => {
   }
 
   return byCategory.filter((mineral) =>
-    normalizeSearchText([mineral.name, mineral.formula, ...mineral.colors].join(" ")).includes(query),
+    normalizeSearchText([mineral.name, ...(mineral.colors ?? []), mineral.element, mineral.planet, ...(mineral.zodiacSigns ?? []), ...(mineral.chakras ?? [])].join(" ")).includes(query),
   );
 });
 

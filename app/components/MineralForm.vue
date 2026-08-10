@@ -68,7 +68,7 @@
       <CardContent class="flex flex-col gap-3">
         <Textarea
           v-model="aiText"
-          placeholder="Cole ou escreva um texto livre sobre o minério (nome, composição, dureza, cor, sistema cristalino, curiosidades...) e deixe a IA preencher o formulário."
+          placeholder="Cole ou escreva um texto livre sobre o minério (nome, dureza, cor, elemento, planeta regente, signo do zodíaco, chakras, propriedades mágicas, curiosidades...) e deixe a IA preencher o formulário."
           rows="4"
         />
         <div class="flex items-center justify-between gap-2">
@@ -113,11 +113,6 @@
             </SelectContent>
           </Select>
         </div>
-
-        <div class="flex flex-col gap-2">
-          <Label for="mineral-formula">Fórmula química</Label>
-          <Input id="mineral-formula" v-model="form.formula" placeholder="Ex: SiO₂" class="font-mono" required />
-        </div>
       </CardContent>
     </Card>
 
@@ -155,17 +150,72 @@
         </div>
 
         <div class="flex flex-col gap-2">
-          <Label for="mineral-crystal-system">Sistema cristalino</Label>
-          <Select v-model="form.crystalSystem" required>
-            <SelectTrigger id="mineral-crystal-system" class="w-full">
-              <SelectValue placeholder="Selecione um sistema" />
+          <Label for="mineral-element">Elemento</Label>
+          <Select v-model="form.element" required>
+            <SelectTrigger id="mineral-element" class="w-full">
+              <SelectValue placeholder="Selecione um elemento" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem v-for="system in crystalSystems" :key="system" :value="system">
-                {{ system }}
+              <SelectItem v-for="option in elements" :key="option" :value="option">
+                {{ option }}
               </SelectItem>
             </SelectContent>
           </Select>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <Label for="mineral-planet">Planeta</Label>
+          <Select v-model="form.planet" required>
+            <SelectTrigger id="mineral-planet" class="w-full">
+              <SelectValue placeholder="Selecione um planeta" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem v-for="option in planets" :key="option" :value="option">
+                {{ option }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div class="flex items-center gap-2 sm:col-span-2">
+          <Switch id="mineral-waterproof" v-model="form.waterproof" />
+          <Label for="mineral-waterproof">À prova d'água</Label>
+        </div>
+
+        <div class="flex flex-col gap-2 sm:col-span-2">
+          <Label>Signo(s) do zodíaco</Label>
+
+          <div class="flex flex-wrap gap-2">
+            <button
+              v-for="sign in zodiacSignOptions"
+              :key="sign"
+              type="button"
+              class="cursor-pointer rounded-full border px-3 py-1.5 text-xs transition-colors"
+              :class="form.zodiacSigns.includes(sign) ? 'border-foreground bg-accent' : 'border-border hover:bg-accent'"
+              :aria-pressed="form.zodiacSigns.includes(sign)"
+              @click="toggleZodiacSign(sign)"
+            >
+              {{ sign }}
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2 sm:col-span-2">
+          <Label>Chakra(s)</Label>
+
+          <div class="flex flex-wrap gap-2">
+            <button
+              v-for="chakra in chakraOptions"
+              :key="chakra"
+              type="button"
+              class="cursor-pointer rounded-full border px-3 py-1.5 text-xs transition-colors"
+              :class="form.chakras.includes(chakra) ? 'border-foreground bg-accent' : 'border-border hover:bg-accent'"
+              :aria-pressed="form.chakras.includes(chakra)"
+              @click="toggleChakra(chakra)"
+            >
+              {{ chakra }}
+            </button>
+          </div>
         </div>
 
         <div class="flex flex-col gap-2 sm:col-span-2">
@@ -229,6 +279,22 @@
       </CardContent>
     </Card>
 
+    <Card>
+      <CardHeader>
+        <CardTitle class="text-base">
+          Propriedades mágicas
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Textarea
+          v-model="form.magicalProperties"
+          placeholder="Descreva os poderes e usos místicos/energéticos do mineral."
+          rows="4"
+          required
+        />
+      </CardContent>
+    </Card>
+
     <div class="flex justify-end gap-2">
       <Button type="button" variant="outline" as-child>
         <NuxtLink to="/admin/minerais">
@@ -267,14 +333,33 @@ const emit = defineEmits<{
 
 const { categories } = useCategoriesStore()
 
-const crystalSystems = [
-  'Cúbico',
-  'Tetragonal',
-  'Ortorrômbico',
-  'Hexagonal',
-  'Trigonal',
-  'Monoclínico',
-  'Triclínico',
+const elements = ['Fogo', 'Terra', 'Ar', 'Água']
+
+const planets = ['Sol', 'Lua', 'Mercúrio', 'Vênus', 'Marte', 'Júpiter', 'Saturno']
+
+const zodiacSignOptions = [
+  'Áries',
+  'Touro',
+  'Gêmeos',
+  'Câncer',
+  'Leão',
+  'Virgem',
+  'Libra',
+  'Escorpião',
+  'Sagitário',
+  'Capricórnio',
+  'Aquário',
+  'Peixes',
+]
+
+const chakraOptions = [
+  'Raiz',
+  'Sacral',
+  'Plexo Solar',
+  'Cardíaco',
+  'Laríngeo',
+  'Frontal',
+  'Coronário',
 ]
 
 const colorPalette = [
@@ -297,13 +382,17 @@ const colorPalette = [
 const form = reactive<Omit<Mineral, 'id'>>({
   name: props.initialValue?.name ?? '',
   categorySlug: props.initialValue?.categorySlug ?? '',
-  formula: props.initialValue?.formula ?? '',
   hardnessMin: props.initialValue?.hardnessMin ?? 1,
   hardnessMax: props.initialValue?.hardnessMax ?? 1,
-  crystalSystem: props.initialValue?.crystalSystem ?? '',
   colors: [...(props.initialValue?.colors ?? [])],
   description: props.initialValue?.description ?? '',
   images: [...(props.initialValue?.images ?? [])],
+  waterproof: props.initialValue?.waterproof ?? false,
+  magicalProperties: props.initialValue?.magicalProperties ?? '',
+  zodiacSigns: [...(props.initialValue?.zodiacSigns ?? [])],
+  element: props.initialValue?.element ?? '',
+  planet: props.initialValue?.planet ?? '',
+  chakras: [...(props.initialValue?.chakras ?? [])],
 })
 
 const customColor = ref('')
@@ -337,6 +426,26 @@ function removeColor(value: string) {
   const index = form.colors.indexOf(value)
   if (index !== -1) {
     form.colors.splice(index, 1)
+  }
+}
+
+function toggleZodiacSign(value: string) {
+  const index = form.zodiacSigns.indexOf(value)
+  if (index === -1) {
+    form.zodiacSigns.push(value)
+  }
+  else {
+    form.zodiacSigns.splice(index, 1)
+  }
+}
+
+function toggleChakra(value: string) {
+  const index = form.chakras.indexOf(value)
+  if (index === -1) {
+    form.chakras.push(value)
+  }
+  else {
+    form.chakras.splice(index, 1)
   }
 }
 
@@ -381,12 +490,16 @@ async function handleStructureWithAI() {
 
     if (result.name) form.name = result.name
     if (result.categorySlug) form.categorySlug = result.categorySlug
-    if (result.formula) form.formula = result.formula
     if (result.hardnessMin) form.hardnessMin = result.hardnessMin
     if (result.hardnessMax) form.hardnessMax = result.hardnessMax
-    if (result.crystalSystem) form.crystalSystem = result.crystalSystem
     if (result.colors.length) form.colors = result.colors
     if (result.description) form.description = result.description
+    form.waterproof = result.waterproof
+    if (result.magicalProperties) form.magicalProperties = result.magicalProperties
+    if (result.zodiacSigns.length) form.zodiacSigns = result.zodiacSigns
+    if (result.element) form.element = result.element
+    if (result.planet) form.planet = result.planet
+    if (result.chakras.length) form.chakras = result.chakras
   }
   catch {
     // aiError já é preenchido pelo composable

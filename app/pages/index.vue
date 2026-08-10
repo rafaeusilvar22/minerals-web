@@ -115,7 +115,7 @@
             </span>
             <span class="flex min-w-0 flex-1 flex-col items-start">
               <span class="truncate text-card-name text-foreground">{{ result.name }}</span>
-              <span class="truncate font-mono text-xs text-muted-foreground">{{ result.formula }}</span>
+              <span class="truncate font-mono text-xs text-muted-foreground">{{ result.element }}</span>
             </span>
           </ComboboxItem>
 
@@ -189,29 +189,63 @@
 
         <h2 class="text-mineral-title font-heading text-foreground">{{ featuredMineral.name }}</h2>
 
-        <p class="font-mono text-body text-primary">{{ featuredMineral.formula }}</p>
-
-        <div class="flex flex-wrap gap-2">
-          <Badge
-            variant="outline"
-            class="h-auto rounded-full border-border bg-card px-3 py-1 text-xs font-normal text-foreground"
-          >
-            Dureza {{ formatHardness(featuredMineral) }} · Mohs
-          </Badge>
-          <Badge
-            variant="outline"
-            class="h-auto rounded-full border-border bg-card px-3 py-1 text-xs font-normal text-foreground"
-          >
-            Sistema {{ featuredMineral.crystalSystem }}
-          </Badge>
-          <Badge
-            v-for="color in featuredMineral.colors"
-            :key="color"
-            variant="outline"
-            class="h-auto rounded-full border-border bg-card px-3 py-1 text-xs font-normal text-foreground"
-          >
-            Cor {{ color }}
-          </Badge>
+        <div class="grid grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-3">
+          <div v-if="featuredMineral.waterproof !== undefined" class="flex flex-col gap-1">
+            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+              À prova d'água
+            </span>
+            <p class="text-body text-muted-foreground">
+              {{ featuredMineral.waterproof ? "Sim" : "Não" }}
+            </p>
+          </div>
+          <div v-if="featuredMineral.chakras?.length" class="flex flex-col gap-1">
+            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+              Chakra
+            </span>
+            <p class="text-body text-muted-foreground">
+              {{ featuredMineral.chakras.join(', ') }}
+            </p>
+          </div>
+          <div v-if="featuredMineral.colors?.length" class="flex flex-col gap-1">
+            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+              Cor
+            </span>
+            <p class="text-body text-muted-foreground">
+              {{ featuredMineral.colors.join(', ') }}
+            </p>
+          </div>
+          <div v-if="featuredMineral.hardnessMin != null && featuredMineral.hardnessMax != null" class="flex flex-col gap-1">
+            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+              Dureza
+            </span>
+            <p class="text-body text-muted-foreground">
+              {{ formatHardness(featuredMineral) }} · Mohs
+            </p>
+          </div>
+          <div v-if="featuredMineral.element" class="flex flex-col gap-1">
+            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+              Elemento
+            </span>
+            <p class="text-body text-muted-foreground">
+              {{ featuredMineral.element }}
+            </p>
+          </div>
+          <div v-if="featuredMineral.planet" class="flex flex-col gap-1">
+            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+              Planeta
+            </span>
+            <p class="text-body text-muted-foreground">
+              {{ featuredMineral.planet }}
+            </p>
+          </div>
+          <div v-if="featuredMineral.zodiacSigns?.length" class="flex flex-col gap-1">
+            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+              Signo
+            </span>
+            <p class="text-body text-muted-foreground">
+              {{ (featuredMineral.zodiacSigns ?? []).join(', ') }}
+            </p>
+          </div>
         </div>
 
         <p class="text-body text-muted-foreground">
@@ -260,7 +294,6 @@
       >
         <MineralCard
           :name="mineral.name"
-          :formula="mineral.formula"
           :description="mineral.description"
           :dot-color="getCategoryBySlug(mineral.categorySlug)?.dotColor ?? 'var(--muted-foreground)'"
           :image="mineral.images[0]"
@@ -319,13 +352,13 @@ function getCategoryBySlug(slug: string) {
   return allCategories.value.find((category) => category.slug === slug);
 }
 
-const crystalSystemCount = computed(
-  () => new Set(allMinerals.value.map((mineral) => mineral.crystalSystem).filter(Boolean)).size,
+const zodiacSignCount = computed(
+  () => new Set(allMinerals.value.flatMap((mineral) => mineral.zodiacSigns ?? [])).size,
 );
 
 const stats = computed(() => [
   { value: `${allMinerals.value.length}`, label: "minerais" },
-  { value: `${crystalSystemCount.value}`, label: "sistemas cristalinos" },
+  { value: `${zodiacSignCount.value}`, label: "signos do zodíaco" },
   { value: "1–10", label: "Escala Mohs", prefix: true },
 ]);
 

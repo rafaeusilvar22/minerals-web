@@ -24,11 +24,11 @@
           <TableRow>
             <TableHead>Nome</TableHead>
             <TableHead>Categoria</TableHead>
-            <TableHead>Fórmula</TableHead>
-            <TableHead class="text-right">
-              Dureza (Mohs)
+            <TableHead>Elemento</TableHead>
+            <TableHead>Dureza (Mohs)</TableHead>
+            <TableHead class="w-20 text-right">
+              Ações
             </TableHead>
-            <TableHead class="w-20" />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -43,11 +43,12 @@
               <TableCell>
                 <Skeleton class="h-4 w-20" />
               </TableCell>
-              <TableCell class="flex justify-end">
+              <TableCell>
                 <Skeleton class="h-4 w-6" />
               </TableCell>
               <TableCell>
                 <div class="flex justify-end gap-1">
+                  <Skeleton class="size-7 rounded-md" />
                   <Skeleton class="size-7 rounded-md" />
                   <Skeleton class="size-7 rounded-md" />
                 </div>
@@ -69,14 +70,19 @@
                   {{ getCategory(mineral.categorySlug)?.name }}
                 </div>
               </TableCell>
-              <TableCell class="font-mono text-muted-foreground">
-                {{ mineral.formula }}
+              <TableCell class="text-muted-foreground">
+                {{ mineral.element }}
               </TableCell>
-              <TableCell class="text-right text-muted-foreground">
+              <TableCell class="text-muted-foreground">
                 {{ formatHardness(mineral) }}
               </TableCell>
               <TableCell>
                 <div class="flex justify-end gap-1">
+                  <Button variant="ghost" size="icon-sm" aria-label="Ver mineral publicado" title="Ver mineral publicado" as-child>
+                    <NuxtLink :to="`/minerais/${mineral.id}`" target="_blank">
+                      <LucideExternalLink class="size-4" />
+                    </NuxtLink>
+                  </Button>
                   <Button variant="ghost" size="icon-sm" aria-label="Editar mineral" title="Editar" as-child>
                     <NuxtLink :to="`/admin/minerais/${mineral.id}/editar`">
                       <LucidePencil class="size-4" />

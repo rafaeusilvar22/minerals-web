@@ -4,13 +4,17 @@ interface MineralRecord {
   id: string
   name: string
   categorySlug: string
-  formula: string
   hardnessMin: number
   hardnessMax: number
-  crystalSystem: string
   colors: string[]
   description: string
   images: string[]
+  waterproof: boolean
+  magicalProperties: string
+  zodiacSigns: string[]
+  element: string
+  planet: string
+  chakras: string[]
 }
 
 interface CategoryRecord {

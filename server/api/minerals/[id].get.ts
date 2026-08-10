@@ -1,4 +1,4 @@
-import { doc, getDoc } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, limit, query, where } from 'firebase/firestore'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
@@ -14,5 +14,13 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, statusMessage: 'Mineral não encontrado.' })
   }
 
-  return { id: snapshot.id, ...snapshot.data() }
+  const mineral = { id: snapshot.id, ...snapshot.data() } as { categorySlug: string }
+
+  const categorySnapshot = await getDocs(
+    query(collection(db, 'mineralCategories'), where('slug', '==', mineral.categorySlug), limit(1)),
+  )
+  const categoryDoc = categorySnapshot.docs[0]
+  const category = categoryDoc ? { id: categoryDoc.id, ...categoryDoc.data() } : null
+
+  return { ...mineral, category }
 })

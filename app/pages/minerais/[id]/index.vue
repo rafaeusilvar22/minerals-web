@@ -44,33 +44,84 @@
       </div>
 
       <div class="flex flex-col items-start gap-4">
-        <span v-if="category" class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
-          {{ category.name }}
-        </span>
-
         <h1 class="text-mineral-title font-heading text-foreground">
           {{ mineral.name }}
         </h1>
 
-        <p class="font-mono text-body text-primary">
-          {{ mineral.formula }}
-        </p>
+        <div class="grid grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-3">
+          <div v-if="mineral.waterproof !== undefined" class="flex flex-col gap-1">
+            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+              À prova d'água
+            </span>
+            <p class="text-body text-muted-foreground">
+              {{ mineral.waterproof ? "Sim" : "Não" }}
+            </p>
+          </div>
+          <div v-if="mineral.category" class="flex flex-col gap-1">
+            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+              Categoria
+            </span>
+            <p class="text-body text-muted-foreground">
+              {{ mineral.category.name }}
+            </p>
+          </div>
+          <div v-if="mineral.chakras?.length" class="flex flex-col gap-1">
+            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+              Chakra
+            </span>
+            <p class="text-body text-muted-foreground">
+              {{ mineral.chakras.join(', ') }}
+            </p>
+          </div>
+          <div v-if="mineral.colors?.length" class="flex flex-col gap-1">
+            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+              Cor
+            </span>
+            <p class="text-body text-muted-foreground">
+              {{ mineral.colors.join(', ') }}
+            </p>
+          </div>
+          <div v-if="mineral.hardnessMin != null && mineral.hardnessMax != null" class="flex flex-col gap-1">
+            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+              Dureza
+            </span>
+            <p class="text-body text-muted-foreground">
+              {{ formatHardness(mineral) }} · Mohs
+            </p>
+          </div>
+          <div v-if="mineral.element" class="flex flex-col gap-1">
+            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+              Elemento
+            </span>
+            <p class="text-body text-muted-foreground">
+              {{ mineral.element }}
+            </p>
+          </div>
+          <div v-if="mineral.planet" class="flex flex-col gap-1">
+            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+              Planeta
+            </span>
+            <p class="text-body text-muted-foreground">
+              {{ mineral.planet }}
+            </p>
+          </div>
+          <div v-if="mineral.zodiacSigns?.length" class="flex flex-col gap-1">
+            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+              Signo
+            </span>
+            <p class="text-body text-muted-foreground">
+              {{ (mineral.zodiacSigns ?? []).join(', ') }}
+            </p>
+          </div>
+        </div>
 
-        <div class="flex flex-wrap gap-2">
-          <Badge variant="outline" class="h-auto rounded-full border-border bg-card px-3 py-1 text-xs font-normal text-foreground">
-            Dureza {{ formatHardness(mineral) }} · Mohs
-          </Badge>
-          <Badge variant="outline" class="h-auto rounded-full border-border bg-card px-3 py-1 text-xs font-normal text-foreground">
-            Sistema {{ mineral.crystalSystem }}
-          </Badge>
-          <Badge
-            v-for="color in mineral.colors"
-            :key="color"
-            variant="outline"
-            class="h-auto rounded-full border-border bg-card px-3 py-1 text-xs font-normal text-foreground"
-          >
-            Cor {{ color }}
-          </Badge>
+        <div v-if="mineral.magicalProperties" class="flex flex-col gap-1">
+          <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+            Propriedades mágicas
+          </span>
+          <p class="text-body text-muted-foreground">
+            {{ mineral.magicalProperties }}
+          </p>
         </div>
 
         <p class="text-body text-muted-foreground">
@@ -82,22 +133,24 @@
 </template>
 
 <script setup lang="ts">
+import type { Category } from '~/composables/useCategoriesStore'
 import type { Mineral } from '~/composables/useMineralsStore'
+
+interface MineralWithCategory extends Mineral {
+  category: Category | null
+}
 
 const route = useRoute()
 const mineralId = String(route.params.id)
 
 const { data: mineral, pending } = await useAsyncData(
   `mineral-${mineralId}`,
-  () => $fetch<Mineral>(`/api/minerals/${mineralId}`),
+  () => $fetch<MineralWithCategory>(`/api/minerals/${mineralId}`),
 )
 
 if (!pending.value && !mineral.value) {
   throw createError({ statusCode: 404, statusMessage: 'Mineral não encontrado.', fatal: true })
 }
-
-const { getBySlug: getCategoryBySlug } = useCategoriesStore()
-const category = computed(() => mineral.value ? getCategoryBySlug(mineral.value.categorySlug) : undefined)
 
 useHead({
   title: () => mineral.value ? `${mineral.value.name} · Magia Cristais` : 'Mineral · Magia Cristais',

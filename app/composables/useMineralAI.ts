@@ -1,12 +1,16 @@
 export interface StructuredMineral {
   name: string
   categorySlug: string
-  formula: string
   hardnessMin: number
   hardnessMax: number
-  crystalSystem: string
   colors: string[]
   description: string
+  waterproof: boolean
+  magicalProperties: string
+  zodiacSigns: string[]
+  element: string
+  planet: string
+  chakras: string[]
 }
 
 export function useMineralAI() {

@@ -13,14 +13,9 @@
     </div>
 
     <CardContent class="flex flex-col gap-2 p-4">
-      <div class="flex items-center justify-between gap-2">
-        <div class="flex items-center gap-2">
-          <span class="size-2 shrink-0 rounded-full" :style="{ backgroundColor: dotColor }" />
-          <span class="text-card-name font-heading text-foreground">{{ name }}</span>
-        </div>
-        <Badge variant="outline" class="h-auto shrink-0 rounded-full border-border bg-accent px-2.5 py-0.5 font-mono text-xs font-normal text-primary">
-          {{ formula }}
-        </Badge>
+      <div class="flex items-center gap-2">
+        <span class="size-2 shrink-0 rounded-full" :style="{ backgroundColor: dotColor }" />
+        <span class="text-card-name font-heading text-foreground">{{ name }}</span>
       </div>
 
       <p class="text-card-description text-muted-foreground">
@@ -33,7 +28,6 @@
 <script setup lang="ts">
 withDefaults(defineProps<{
   name: string
-  formula: string
   description: string
   dotColor: string
   image?: string
