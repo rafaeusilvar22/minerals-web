@@ -124,9 +124,14 @@
           </p>
         </div>
 
-        <p class="text-body text-muted-foreground">
-          {{ mineral.description }}
-        </p>
+        <div class="flex flex-col gap-1">
+          <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+            Descrição
+          </span>
+          <p class="text-body text-muted-foreground">
+            {{ mineral.description }}
+          </p>
+        </div>
       </div>
     </div>
   </div>

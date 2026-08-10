@@ -1,7 +1,7 @@
 <template>
   <Card class="gap-0 overflow-hidden py-0">
     <div
-      class="relative flex aspect-4/3 items-center justify-center border-b border-border bg-muted"
+      class="relative flex h-48 items-center justify-center border-b border-border bg-muted"
       :style="!image ? {
         backgroundImage: 'repeating-linear-gradient(135deg, var(--accent) 0px, var(--accent) 1px, transparent 1px, transparent 14px)',
       } : undefined"
@@ -18,7 +18,7 @@
         <span class="text-card-name font-heading text-foreground">{{ name }}</span>
       </div>
 
-      <p class="text-card-description text-muted-foreground">
+      <p class="text-card-description line-clamp-2 text-muted-foreground">
         {{ description }}
       </p>
     </CardContent>

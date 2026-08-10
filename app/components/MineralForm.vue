@@ -85,6 +85,26 @@
             {{ aiLoading ? 'Estruturando...' : 'Estruturar com IA' }}
           </Button>
         </div>
+
+        <Separator />
+
+        <div class="flex items-center justify-between gap-2">
+          <p v-if="improveError" class="text-sm text-destructive">
+            {{ improveError }}
+          </p>
+          <p v-else class="text-sm text-muted-foreground">
+            Revisa os campos já preenchidos e sugere correções antes de aplicar.
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            class="ml-auto shrink-0"
+            :disabled="improveLoading"
+            @click="handleImproveWithAI"
+          >
+            {{ improveLoading ? 'Revisando...' : 'Aperfeiçoar com IA' }}
+          </Button>
+        </div>
       </CardContent>
     </Card>
 
@@ -310,9 +330,69 @@
       {{ formError }}
     </p>
   </form>
+
+  <Dialog v-model:open="isImprovePreviewOpen" @update:open="onImprovePreviewOpenChange">
+    <DialogContent class="sm:max-w-lg">
+      <DialogHeader>
+        <DialogTitle>Sugestões de aperfeiçoamento</DialogTitle>
+        <DialogDescription>
+          Revise as mudanças sugeridas pela IA e escolha quais aplicar.
+        </DialogDescription>
+      </DialogHeader>
+
+      <div v-if="improveDiffs.length" class="flex max-h-[60vh] flex-col gap-4 overflow-y-auto">
+        <div
+          v-for="diff in improveDiffs"
+          :key="diff.key"
+          class="flex gap-3 rounded-xl border border-border p-3"
+        >
+          <Checkbox
+            :id="`diff-${diff.key}`"
+            :model-value="selectedDiffKeys.has(diff.key)"
+            class="mt-1"
+            @update:model-value="toggleDiffSelection(diff.key)"
+          />
+          <div class="flex flex-1 flex-col gap-1.5">
+            <Label :for="`diff-${diff.key}`" class="text-sm font-medium text-foreground">
+              {{ diff.label }}
+            </Label>
+            <div class="flex flex-col gap-1 text-sm">
+              <p class="text-muted-foreground line-through decoration-muted-foreground/50">
+                {{ diff.current || '—' }}
+              </p>
+              <p class="text-foreground">
+                {{ diff.suggested || '—' }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p v-else class="text-sm text-muted-foreground">
+        A IA não encontrou nada para melhorar — os campos atuais já parecem corretos.
+      </p>
+
+      <DialogFooter class="mt-2">
+        <DialogClose as-child>
+          <Button type="button" variant="outline">
+            {{ improveDiffs.length ? 'Cancelar' : 'Fechar' }}
+          </Button>
+        </DialogClose>
+        <Button
+          v-if="improveDiffs.length"
+          type="button"
+          :disabled="!selectedDiffKeys.size"
+          @click="applySelectedImprovements"
+        >
+          Aplicar selecionadas
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
+import type { ImprovedMineralFields } from '~/composables/useMineralAI'
 import type { Mineral } from '~/composables/useMineralsStore'
 
 const props = withDefaults(defineProps<{
@@ -481,7 +561,14 @@ function removeImage(index: number) {
   form.images.splice(index, 1)
 }
 
-const { structure, loading: aiLoading, error: aiError } = useMineralAI()
+const {
+  structure,
+  loading: aiLoading,
+  error: aiError,
+  improve,
+  improveLoading,
+  improveError,
+} = useMineralAI()
 const aiText = ref('')
 
 async function handleStructureWithAI() {
@@ -503,6 +590,168 @@ async function handleStructureWithAI() {
   }
   catch {
     // aiError já é preenchido pelo composable
+  }
+}
+
+type DiffFieldKey = 'hardness' | 'colors' | 'description' | 'magicalProperties' | 'zodiacSigns' | 'element' | 'planet' | 'chakras'
+
+interface FieldDiff {
+  key: DiffFieldKey
+  label: string
+  current: string
+  suggested: string
+}
+
+function sameSet(a: string[], b: string[]) {
+  if (a.length !== b.length) return false
+  const sortedA = [...a].sort()
+  const sortedB = [...b].sort()
+  return sortedA.every((value, index) => value === sortedB[index])
+}
+
+function buildDiffs(result: ImprovedMineralFields): FieldDiff[] {
+  const diffs: FieldDiff[] = []
+
+  if (result.hardnessMin !== form.hardnessMin || result.hardnessMax !== form.hardnessMax) {
+    diffs.push({
+      key: 'hardness',
+      label: 'Dureza (Mohs)',
+      current: `${form.hardnessMin} – ${form.hardnessMax}`,
+      suggested: `${result.hardnessMin} – ${result.hardnessMax}`,
+    })
+  }
+
+  if (!sameSet(form.colors, result.colors)) {
+    diffs.push({
+      key: 'colors',
+      label: 'Cor(es)',
+      current: form.colors.join(', '),
+      suggested: result.colors.join(', '),
+    })
+  }
+
+  if (result.description.trim() !== form.description.trim()) {
+    diffs.push({
+      key: 'description',
+      label: 'Descrição',
+      current: form.description,
+      suggested: result.description,
+    })
+  }
+
+  if (result.magicalProperties.trim() !== form.magicalProperties.trim()) {
+    diffs.push({
+      key: 'magicalProperties',
+      label: 'Propriedades mágicas',
+      current: form.magicalProperties,
+      suggested: result.magicalProperties,
+    })
+  }
+
+  if (!sameSet(form.zodiacSigns, result.zodiacSigns)) {
+    diffs.push({
+      key: 'zodiacSigns',
+      label: 'Signo(s) do zodíaco',
+      current: form.zodiacSigns.join(', '),
+      suggested: result.zodiacSigns.join(', '),
+    })
+  }
+
+  if (result.element !== form.element) {
+    diffs.push({
+      key: 'element',
+      label: 'Elemento',
+      current: form.element,
+      suggested: result.element,
+    })
+  }
+
+  if (result.planet !== form.planet) {
+    diffs.push({
+      key: 'planet',
+      label: 'Planeta',
+      current: form.planet,
+      suggested: result.planet,
+    })
+  }
+
+  if (!sameSet(form.chakras, result.chakras)) {
+    diffs.push({
+      key: 'chakras',
+      label: 'Chakra(s)',
+      current: form.chakras.join(', '),
+      suggested: result.chakras.join(', '),
+    })
+  }
+
+  return diffs
+}
+
+const isImprovePreviewOpen = ref(false)
+const improveDiffs = ref<FieldDiff[]>([])
+const pendingImprovement = ref<ImprovedMineralFields | null>(null)
+const selectedDiffKeys = ref<Set<DiffFieldKey>>(new Set())
+
+async function handleImproveWithAI() {
+  try {
+    const category = categories.value.find(item => item.slug === form.categorySlug)
+    const result = await improve({
+      name: form.name,
+      categoryName: category?.name,
+      hardnessMin: form.hardnessMin,
+      hardnessMax: form.hardnessMax,
+      colors: form.colors,
+      description: form.description,
+      magicalProperties: form.magicalProperties,
+      zodiacSigns: form.zodiacSigns,
+      element: form.element,
+      planet: form.planet,
+      chakras: form.chakras,
+    })
+
+    improveDiffs.value = buildDiffs(result)
+    pendingImprovement.value = result
+    selectedDiffKeys.value = new Set(improveDiffs.value.map(diff => diff.key))
+    isImprovePreviewOpen.value = true
+  }
+  catch {
+    // improveError já é preenchido pelo composable
+  }
+}
+
+function toggleDiffSelection(key: DiffFieldKey) {
+  if (selectedDiffKeys.value.has(key)) {
+    selectedDiffKeys.value.delete(key)
+  }
+  else {
+    selectedDiffKeys.value.add(key)
+  }
+}
+
+function applySelectedImprovements() {
+  const result = pendingImprovement.value
+  if (!result) return
+
+  if (selectedDiffKeys.value.has('hardness')) {
+    form.hardnessMin = result.hardnessMin
+    form.hardnessMax = result.hardnessMax
+  }
+  if (selectedDiffKeys.value.has('colors')) form.colors = [...result.colors]
+  if (selectedDiffKeys.value.has('description')) form.description = result.description
+  if (selectedDiffKeys.value.has('magicalProperties')) form.magicalProperties = result.magicalProperties
+  if (selectedDiffKeys.value.has('zodiacSigns')) form.zodiacSigns = [...result.zodiacSigns]
+  if (selectedDiffKeys.value.has('element')) form.element = result.element
+  if (selectedDiffKeys.value.has('planet')) form.planet = result.planet
+  if (selectedDiffKeys.value.has('chakras')) form.chakras = [...result.chakras]
+
+  isImprovePreviewOpen.value = false
+}
+
+function onImprovePreviewOpenChange(open: boolean) {
+  if (!open) {
+    improveDiffs.value = []
+    pendingImprovement.value = null
+    selectedDiffKeys.value = new Set()
   }
 }
 
