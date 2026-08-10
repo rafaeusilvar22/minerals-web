@@ -111,7 +111,16 @@
                 backgroundImage: 'repeating-linear-gradient(135deg, var(--accent) 0px, var(--accent) 1px, transparent 1px, transparent 6px)',
               } : undefined"
             >
-              <img v-if="result.images.length" :src="result.images[0]" :alt="result.name" class="size-full object-cover">
+              <NuxtImg
+                v-if="result.images.length"
+                provider="cloudinary"
+                :src="cloudinaryPath(result.images[0])"
+                :alt="result.name"
+                width="36"
+                height="36"
+                fit="cover"
+                class="size-full object-cover"
+              />
             </span>
             <span class="flex min-w-0 flex-1 flex-col items-start">
               <span class="truncate text-card-name text-foreground">{{ result.name }}</span>
@@ -165,12 +174,16 @@
             backgroundImage: 'repeating-linear-gradient(135deg, var(--accent) 0px, var(--accent) 1px, transparent 1px, transparent 14px)',
           } : undefined"
         >
-          <img
+          <NuxtImg
             v-if="featuredMineral.images.length"
-            :src="featuredMineral.images[0]"
+            provider="cloudinary"
+            :src="cloudinaryPath(featuredMineral.images[0])"
             :alt="featuredMineral.name"
+            width="640"
+            height="480"
+            fit="cover"
             class="size-full object-cover"
-          >
+          />
           <span
             v-else
             class="text-eyebrow font-heading uppercase tracking-[0.13em] text-muted-foreground"

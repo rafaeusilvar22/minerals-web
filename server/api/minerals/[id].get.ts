@@ -14,6 +14,8 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, statusMessage: 'Mineral não encontrado.' })
   }
 
+  setResponseHeader(event, 'cache-control', 'public, max-age=0, s-maxage=600, stale-while-revalidate=86400')
+
   const mineral = { id: snapshot.id, ...snapshot.data() } as { categorySlug: string }
 
   const categorySnapshot = await getDocs(

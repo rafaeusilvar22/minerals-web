@@ -44,7 +44,9 @@ function isFeaturedExpired(config: FeaturedMineralConfig) {
   return Date.now() > config.selectedAt.toMillis() + DURATION_MS[config.duration]
 }
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
+  setResponseHeader(event, 'cache-control', 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400')
+
   const db = useServerFirestore()
 
   const [mineralsSnapshot, categoriesSnapshot, featuredSnapshot] = await Promise.all([

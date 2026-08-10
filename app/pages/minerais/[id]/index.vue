@@ -21,7 +21,15 @@
           <CarouselContent>
             <CarouselItem v-for="(image, index) in mineral.images" :key="image">
               <div class="aspect-4/3 overflow-hidden rounded-2xl border border-border bg-muted">
-                <img :src="image" :alt="`${mineral.name} · foto ${index + 1}`" class="size-full object-cover">
+                <NuxtImg
+                  provider="cloudinary"
+                  :src="cloudinaryPath(image)"
+                  :alt="`${mineral.name} · foto ${index + 1}`"
+                  width="800"
+                  height="600"
+                  fit="cover"
+                  class="size-full object-cover"
+                />
               </div>
             </CarouselItem>
           </CarouselContent>
@@ -36,7 +44,16 @@
             backgroundImage: 'repeating-linear-gradient(135deg, var(--accent) 0px, var(--accent) 1px, transparent 1px, transparent 14px)',
           } : undefined"
         >
-          <img v-if="mineral.images.length" :src="mineral.images[0]" :alt="mineral.name" class="size-full object-cover">
+          <NuxtImg
+            v-if="mineral.images.length"
+            provider="cloudinary"
+            :src="cloudinaryPath(mineral.images[0])"
+            :alt="mineral.name"
+            width="640"
+            height="480"
+            fit="cover"
+            class="size-full object-cover"
+          />
           <span v-else class="text-eyebrow font-heading uppercase tracking-[0.13em] text-muted-foreground">
             Foto · {{ mineral.name }}
           </span>

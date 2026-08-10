@@ -83,6 +83,8 @@
 </template>
 
 <script setup lang="ts">
+import type { Category } from "~/composables/useCategoriesStore";
+import type { Mineral } from "~/composables/useMineralsStore";
 import { normalizeSearchText } from "~/lib/utils";
 
 useHead({
@@ -95,8 +97,20 @@ useHead({
   ],
 });
 
-const { minerals: allMinerals, loading } = useMineralsStore();
-const { categories: allCategories, getBySlug: getCategoryBySlug } = useCategoriesStore();
+interface HomeData {
+  minerals: Mineral[];
+  categories: Category[];
+  featuredMineralId: string | null;
+}
+
+const { data: home, pending: loading } = await useAsyncData("home", () => $fetch<HomeData>("/api/home"));
+
+const allMinerals = computed(() => home.value?.minerals ?? []);
+const allCategories = computed(() => home.value?.categories ?? []);
+
+function getCategoryBySlug(slug: string) {
+  return allCategories.value.find((category) => category.slug === slug);
+}
 
 const route = useRoute();
 const searchQuery = computed(() => (typeof route.query.q === "string" ? route.query.q.trim() : ""));

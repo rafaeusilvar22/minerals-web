@@ -34,7 +34,15 @@
             :key="image"
             class="group relative aspect-square overflow-hidden rounded-xl border border-border"
           >
-            <img :src="image" alt="" class="size-full object-cover">
+            <NuxtImg
+              provider="cloudinary"
+              :src="cloudinaryPath(image)"
+              alt=""
+              width="300"
+              height="300"
+              fit="cover"
+              class="size-full object-cover"
+            />
             <button
               type="button"
               class="absolute top-1.5 right-1.5 flex size-6 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover:opacity-100"

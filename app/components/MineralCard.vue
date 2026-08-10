@@ -6,7 +6,16 @@
         backgroundImage: 'repeating-linear-gradient(135deg, var(--accent) 0px, var(--accent) 1px, transparent 1px, transparent 14px)',
       } : undefined"
     >
-      <img v-if="image" :src="image" :alt="name" class="size-full object-cover">
+      <NuxtImg
+        v-if="image"
+        provider="cloudinary"
+        :src="cloudinaryPath(image)"
+        :alt="name"
+        width="400"
+        height="192"
+        fit="cover"
+        class="size-full object-cover"
+      />
       <span v-else class="text-eyebrow font-heading uppercase tracking-[0.13em] text-muted-foreground">
         Foto · {{ name }}
       </span>

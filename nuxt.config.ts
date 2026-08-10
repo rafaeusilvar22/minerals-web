@@ -18,12 +18,18 @@ export default defineNuxtConfig({
       ],
     },
   },
-  modules: ['@nuxtjs/color-mode', 'shadcn-nuxt', 'nuxt-lucide-icons'],
+  modules: ['@nuxtjs/color-mode', 'shadcn-nuxt', 'nuxt-lucide-icons', '@nuxt/image'],
   css: ['~/assets/css/tailwind.css'],
   vite: {
     plugins: [
       tailwindcss(),
     ],
+  },
+  image: {
+    provider: 'cloudinary',
+    cloudinary: {
+      baseURL: `https://res.cloudinary.com/${process.env.NUXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/`,
+    },
   },
   colorMode: {
     classSuffix: '',
