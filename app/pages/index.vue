@@ -299,9 +299,9 @@
             </li>
             <li class="flex items-center gap-3 text-body text-muted-foreground">
               <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold">
-                <LucideUserCog class="size-4" />
+                <LucideScanEye class="size-4" />
               </span>
-              Personalize seu perfil com um avatar único
+              Identifique uma pedra física com nossa IA, direto de uma foto
             </li>
           </ul>
         </div>

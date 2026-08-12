@@ -1,0 +1,76 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function currentRole() {
+      return isSignedIn()
+        ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role
+        : null;
+    }
+
+    function isAdmin() {
+      return currentRole() == 'admin';
+    }
+
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid) && request.resource.data.role == 'user';
+      allow update: if isAdmin()
+        || (isOwner(uid) && request.resource.data.role == resource.data.role);
+      allow delete: if false;
+
+      match /mineralInteractions/{mineralId} {
+        allow read, create, update, delete: if isOwner(uid);
+      }
+
+      match /aiUsage/{dateKey} {
+        allow read: if isOwner(uid);
+
+        allow create: if isOwner(uid)
+          && request.resource.data.count == 1
+          && request.resource.data.keys().hasOnly(['count', 'updatedAt']);
+
+        allow update: if isOwner(uid)
+          && request.resource.data.count == resource.data.count + 1
+          && request.resource.data.count <= 5
+          && request.resource.data.keys().hasOnly(['count', 'updatedAt']);
+
+        allow delete: if false;
+      }
+
+      match /identifications/{identificationId} {
+        allow read: if isOwner(uid);
+
+        allow create: if isOwner(uid)
+          && request.resource.data.status in ['completed', 'failed']
+          && request.resource.data.keys().hasOnly(['imageUrl', 'candidates', 'status', 'createdAt']);
+
+        allow update: if false;
+        allow delete: if isOwner(uid);
+      }
+    }
+
+    match /minerals/{mineralId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /mineralCategories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

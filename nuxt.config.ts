@@ -54,6 +54,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     groqApiKey: process.env.GROQ_API_KEY,
+    turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY,
     public: {
       firebaseApiKey: process.env.NUXT_PUBLIC_FIREBASE_API_KEY,
       firebaseAuthDomain: process.env.NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -64,6 +65,7 @@ export default defineNuxtConfig({
       firebaseMeasurementId: process.env.NUXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
       cloudinaryCloudName: process.env.NUXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
       cloudinaryUploadPreset: process.env.NUXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
+      turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY,
     }
   }
 })

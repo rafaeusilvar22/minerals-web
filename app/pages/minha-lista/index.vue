@@ -1,12 +1,21 @@
 <template>
   <div class="flex flex-col gap-8 py-8">
-    <div class="flex flex-col gap-1">
-      <h1 class="text-section-title font-heading text-foreground">
-        Minha lista
-      </h1>
-      <p class="text-body text-muted-foreground">
-        Os minerais que você já tem e os que deseja ter.
-      </p>
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex flex-col gap-1">
+        <h1 class="text-section-title font-heading text-foreground">
+          Minha lista
+        </h1>
+        <p class="text-body text-muted-foreground">
+          Os minerais que você já tem e os que deseja ter.
+        </p>
+      </div>
+
+      <Button variant="outline" as-child>
+        <NuxtLink to="/identificar">
+          <LucideScanEye />
+          Identificar mineral
+        </NuxtLink>
+      </Button>
     </div>
 
     <div v-if="loading" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

@@ -63,6 +63,8 @@
           />
         </div>
 
+        <div ref="turnstileContainer" />
+
         <p v-if="error" class="text-sm text-destructive">
           {{ error }}
         </p>
@@ -87,6 +89,15 @@ import { FirebaseError } from 'firebase/app'
 import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth'
 import { doc, setDoc, Timestamp } from 'firebase/firestore'
 
+interface TurnstileApi {
+  render: (container: HTMLElement, options: {
+    sitekey: string
+    callback: (token: string) => void
+    'expired-callback'?: () => void
+  }) => string
+  reset: (widgetId?: string) => void
+}
+
 definePageMeta({
   layout: 'blank',
 })
@@ -97,6 +108,7 @@ useHead({
 
 const { $auth, $db } = useNuxtApp()
 const route = useRoute()
+const config = useRuntimeConfig()
 
 const name = ref('')
 const email = ref('')
@@ -104,6 +116,40 @@ const password = ref('')
 const confirmPassword = ref('')
 const error = ref('')
 const loading = ref(false)
+
+const turnstileContainer = useTemplateRef('turnstileContainer')
+const turnstileToken = ref('')
+const turnstileWidgetId = ref<string | undefined>()
+
+function renderTurnstile() {
+  const turnstile = (window as unknown as { turnstile?: TurnstileApi }).turnstile
+  if (!turnstile || !turnstileContainer.value) return
+
+  turnstileWidgetId.value = turnstile.render(turnstileContainer.value, {
+    sitekey: config.public.turnstileSiteKey,
+    callback: (token) => {
+      turnstileToken.value = token
+    },
+    'expired-callback': () => {
+      turnstileToken.value = ''
+    },
+  })
+}
+
+function resetTurnstile() {
+  turnstileToken.value = ''
+  const turnstile = (window as unknown as { turnstile?: TurnstileApi }).turnstile
+  turnstile?.reset(turnstileWidgetId.value)
+}
+
+onMounted(() => {
+  const script = document.createElement('script')
+  script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
+  script.async = true
+  script.defer = true
+  script.onload = renderTurnstile
+  document.head.appendChild(script)
+})
 
 const loginLink = computed(() => ({
   path: '/login',
@@ -125,9 +171,25 @@ async function handleSubmit() {
     return
   }
 
+  if (!turnstileToken.value) {
+    error.value = 'Complete a verificação de segurança antes de continuar.'
+    return
+  }
+
   loading.value = true
 
   try {
+    const { success } = await $fetch<{ success: boolean }>('/api/verify-captcha', {
+      method: 'POST',
+      body: { token: turnstileToken.value },
+    })
+
+    if (!success) {
+      error.value = 'Não foi possível confirmar a verificação de segurança. Tente novamente.'
+      resetTurnstile()
+      return
+    }
+
     const credential = await createUserWithEmailAndPassword($auth, email.value, password.value)
 
     await updateProfile(credential.user, { displayName: name.value })
@@ -147,6 +209,7 @@ async function handleSubmit() {
     } else {
       error.value = 'Não foi possível criar a conta. Tente novamente.'
     }
+    resetTurnstile()
   } finally {
     loading.value = false
   }

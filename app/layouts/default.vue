@@ -58,6 +58,12 @@
                 </NuxtLink>
               </DropdownMenuItem>
               <DropdownMenuItem as-child>
+                <NuxtLink to="/identificar">
+                  <LucideScanEye />
+                  Identificar mineral
+                </NuxtLink>
+              </DropdownMenuItem>
+              <DropdownMenuItem as-child>
                 <NuxtLink to="/minha-conta">
                   <LucideUserCog />
                   Minha conta
@@ -128,6 +134,17 @@
                         : 'text-muted-foreground hover:bg-muted hover:text-foreground'"
                     >
                       Minha lista
+                    </NuxtLink>
+                  </DrawerClose>
+                  <DrawerClose as-child>
+                    <NuxtLink
+                      to="/identificar"
+                      class="rounded-lg px-3 py-2 text-sm font-medium"
+                      :class="route.path === '/identificar'
+                        ? 'bg-muted text-foreground'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'"
+                    >
+                      Identificar mineral
                     </NuxtLink>
                   </DrawerClose>
                   <DrawerClose as-child>
