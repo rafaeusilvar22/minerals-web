@@ -19,6 +19,8 @@
       <span v-else class="text-eyebrow font-heading uppercase tracking-[0.13em] text-muted-foreground">
         Foto · {{ name }}
       </span>
+
+      <MineralStatusToggle :mineral-id="id" :name="name" class="absolute right-2 top-2" />
     </div>
 
     <CardContent class="flex flex-col gap-2 p-4">
@@ -36,6 +38,7 @@
 
 <script setup lang="ts">
 withDefaults(defineProps<{
+  id: string
   name: string
   description: string
   dotColor: string

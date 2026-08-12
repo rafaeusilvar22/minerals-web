@@ -65,6 +65,8 @@
           {{ mineral.name }}
         </h1>
 
+        <MineralStatusToggle :mineral-id="mineralId" :name="mineral.name" />
+
         <div class="grid grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-3">
           <div v-if="mineral.waterproof !== undefined" class="flex flex-col gap-1">
             <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">

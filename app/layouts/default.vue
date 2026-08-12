@@ -39,11 +39,11 @@
         </NavigationMenu>
 
         <div class="flex items-center gap-1">
-          <DropdownMenu v-if="isMounted && user">
+          <DropdownMenu v-if="isMounted && user && ready" :modal="false">
             <DropdownMenuTrigger as-child>
               <Button variant="outline" size="sm" class="hidden md:inline-flex">
-                <img :src="avatarUrl(user.uid)" :alt="user.email ?? 'Avatar'" class="size-5 shrink-0 rounded-full">
-                <span class="max-w-32 truncate">{{ user.email }}</span>
+                <img :src="avatarUrl(avatarSeed)" :alt="user.email ?? 'Avatar'" class="size-5 shrink-0 rounded-full">
+                <span class="max-w-32 truncate">{{ profile?.displayName || user.email }}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -51,6 +51,12 @@
                 {{ user.email }}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuItem as-child>
+                <NuxtLink to="/minha-lista">
+                  <LucideGem />
+                  Minha lista
+                </NuxtLink>
+              </DropdownMenuItem>
               <DropdownMenuItem as-child>
                 <NuxtLink to="/minha-conta">
                   <LucideUserCog />
@@ -63,6 +69,11 @@
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          <Button v-else-if="isMounted && user" variant="outline" size="sm" disabled class="hidden md:inline-flex">
+            <Skeleton class="size-5 shrink-0 rounded-full" />
+            <Skeleton class="h-4 w-20" />
+          </Button>
 
           <Button v-else variant="outline" size="sm" as-child class="hidden md:inline-flex">
             <NuxtLink to="/login">
@@ -103,10 +114,22 @@
 
                 <Separator class="my-2" />
 
-                <template v-if="isMounted && user">
-                  <div class="px-3 py-2 text-sm text-muted-foreground truncate">
-                    {{ user.email }}
+                <template v-if="isMounted && user && ready">
+                  <div class="flex items-center gap-2 px-3 py-2">
+                    <img :src="avatarUrl(avatarSeed)" :alt="user.email ?? 'Avatar'" class="size-8 shrink-0 rounded-full">
+                    <span class="truncate text-sm font-medium text-foreground">{{ profile?.displayName || user.email }}</span>
                   </div>
+                  <DrawerClose as-child>
+                    <NuxtLink
+                      to="/minha-lista"
+                      class="rounded-lg px-3 py-2 text-sm font-medium"
+                      :class="route.path === '/minha-lista'
+                        ? 'bg-muted text-foreground'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'"
+                    >
+                      Minha lista
+                    </NuxtLink>
+                  </DrawerClose>
                   <DrawerClose as-child>
                     <NuxtLink
                       to="/minha-conta"
@@ -128,6 +151,11 @@
                     </button>
                   </DrawerClose>
                 </template>
+
+                <div v-else-if="isMounted && user" class="flex items-center gap-2 px-3 py-2">
+                  <Skeleton class="size-8 shrink-0 rounded-full" />
+                  <Skeleton class="h-4 w-24" />
+                </div>
 
                 <DrawerClose v-else as-child>
                   <NuxtLink
@@ -197,6 +225,7 @@ import { signOut } from 'firebase/auth'
 const route = useRoute()
 const { $auth } = useNuxtApp()
 const user = useCurrentUser()
+const { avatarSeed, profile, ready } = useUserProfile()
 
 const isScrolled = ref(false)
 const isMounted = ref(false)

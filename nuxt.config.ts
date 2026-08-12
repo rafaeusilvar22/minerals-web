@@ -22,7 +22,7 @@ export default defineNuxtConfig({
     },
   },
   modules: ['@nuxtjs/color-mode', 'shadcn-nuxt', 'nuxt-lucide-icons', '@nuxt/image', '@nuxt/fonts'],
-  css: ['~/assets/css/tailwind.css'],
+  css: ['~/assets/css/tailwind.css', 'vue-sonner/style.css'],
   vite: {
     plugins: [
       tailwindcss(),

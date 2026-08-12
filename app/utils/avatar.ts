@@ -7,3 +7,7 @@ const DICEBEAR_STYLE = 'avataaars'
 export function avatarUrl(seed: string) {
   return `https://api.dicebear.com/9.x/${DICEBEAR_STYLE}/svg?seed=${encodeURIComponent(seed)}`
 }
+
+export function randomAvatarSeed() {
+  return Math.random().toString(36).slice(2, 10)
+}

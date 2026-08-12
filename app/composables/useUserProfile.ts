@@ -1,4 +1,4 @@
-import { doc, getDoc, Timestamp } from 'firebase/firestore'
+import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore'
 
 export type UserRole = 'user' | 'admin'
 
@@ -7,6 +7,7 @@ export interface UserProfile {
   displayName: string
   role: UserRole
   createdAt: Timestamp
+  avatarSeed?: string
 }
 
 const USERS_COLLECTION = 'users'
@@ -39,6 +40,24 @@ export async function resolveUserRole(uid: string): Promise<UserRole | null> {
   return profile.value?.role ?? null
 }
 
+export async function setAvatarSeed(uid: string, seed: string) {
+  const { $db } = useNuxtApp()
+  await setDoc(doc($db, USERS_COLLECTION, uid), { avatarSeed: seed }, { merge: true })
+
+  if (profile.value && loadedForUid.value === uid) {
+    profile.value = { ...profile.value, avatarSeed: seed }
+  }
+}
+
+export async function setDisplayName(uid: string, displayName: string) {
+  const { $db } = useNuxtApp()
+  await setDoc(doc($db, USERS_COLLECTION, uid), { displayName }, { merge: true })
+
+  if (profile.value && loadedForUid.value === uid) {
+    profile.value = { ...profile.value, displayName }
+  }
+}
+
 export function useUserProfile() {
   const user = useCurrentUser()
 
@@ -60,6 +79,13 @@ export function useUserProfile() {
 
   const role = computed(() => profile.value?.role ?? null)
   const isAdmin = computed(() => role.value === 'admin')
+  // Cai pro uid enquanto o perfil não tem uma seed escolhida — mesmo avatar
+  // determinístico que já era usado antes dessa preferência existir.
+  const avatarSeed = computed(() => profile.value?.avatarSeed || user.value?.uid || '')
+  // true só depois que o doc do Firestore já foi buscado pro uid atual — usado
+  // pra evitar mostrar o avatar/nome de fallback (uid/e-mail) por um instante
+  // antes da seed/displayName escolhidos chegarem.
+  const ready = computed(() => !!user.value && loadedForUid.value === user.value.uid)
 
-  return { profile, role, isAdmin, loading }
+  return { profile, role, isAdmin, loading, avatarSeed, ready }
 }

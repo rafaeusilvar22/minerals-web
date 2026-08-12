@@ -8,7 +8,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const isAdminRoute = to.path.startsWith('/admin')
   const isLoginRoute = to.path === '/login'
   const isSignupRoute = to.path === '/cadastro'
-  const isAccountRoute = to.path === '/minha-conta'
+  // Rotas que só exigem estar logado (qualquer role), sem checagem extra.
+  const isAccountRoute = to.path === '/minha-conta' || to.path === '/minha-lista'
 
   if (!isAdminRoute && !isLoginRoute && !isSignupRoute && !isAccountRoute) return
 

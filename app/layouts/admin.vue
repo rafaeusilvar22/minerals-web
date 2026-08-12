@@ -40,13 +40,13 @@
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <DropdownMenu>
+            <DropdownMenu :modal="false">
               <DropdownMenuTrigger as-child>
                 <SidebarMenuButton tooltip="Conta">
-                  <img v-if="isMounted && user" :src="avatarUrl(user.uid)" :alt="user.email ?? 'Avatar'" class="size-5 shrink-0 rounded-full">
+                  <img v-if="isMounted && user && ready" :src="avatarUrl(avatarSeed)" :alt="user.email ?? 'Avatar'" class="size-5 shrink-0 rounded-full">
                   <LucideUser v-else />
-                  <span v-if="isMounted && user" class="truncate group-data-[collapsible=icon]:hidden">
-                    {{ user.email }}
+                  <span v-if="isMounted && user && ready" class="truncate group-data-[collapsible=icon]:hidden">
+                    {{ profile?.displayName || user.email }}
                   </span>
                   <Skeleton v-else class="h-4 w-32 group-data-[collapsible=icon]:hidden" />
                 </SidebarMenuButton>
@@ -56,6 +56,12 @@
                   {{ user.email }}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem as-child>
+                  <NuxtLink to="/minha-lista">
+                    <LucideGem />
+                    Minha lista
+                  </NuxtLink>
+                </DropdownMenuItem>
                 <DropdownMenuItem as-child>
                   <NuxtLink to="/minha-conta">
                     <LucideUserCog />
@@ -93,6 +99,7 @@ import { signOut } from 'firebase/auth'
 const route = useRoute()
 const { $auth } = useNuxtApp()
 const user = useCurrentUser()
+const { avatarSeed, profile, ready } = useUserProfile()
 
 const isMounted = ref(false)
 onMounted(() => {

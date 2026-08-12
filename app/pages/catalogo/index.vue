@@ -49,6 +49,7 @@
           class="block min-w-0 transition-transform hover:-translate-y-0.5"
         >
           <MineralCard
+            :id="mineral.id"
             :name="mineral.name"
             :description="mineral.description"
             :dot-color="getCategoryBySlug(mineral.categorySlug)?.dotColor ?? 'var(--muted-foreground)'"

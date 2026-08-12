@@ -15,12 +15,64 @@
           Dados da conta
         </CardTitle>
       </CardHeader>
-      <CardContent v-if="isMounted" class="flex flex-col gap-5">
-        <img v-if="user" :src="avatarUrl(user.uid)" :alt="user.email ?? 'Avatar'" class="size-16 rounded-full border border-border">
+      <CardContent v-if="isMounted && ready" class="flex flex-col gap-5">
+        <div class="flex items-center gap-4">
+          <img v-if="user" :src="avatarUrl(avatarSeed)" :alt="user.email ?? 'Avatar'" class="size-16 rounded-full border border-border">
+          <Button size="sm" variant="outline" type="button" @click="handleOpenPicker">
+            Escolher avatar
+          </Button>
+        </div>
+
+        <div v-if="pickerOpen" class="flex flex-col gap-3 rounded-lg border border-border bg-muted/50 p-4">
+          <div class="flex flex-wrap gap-3">
+            <button
+              v-for="seed in avatarOptions"
+              :key="seed"
+              type="button"
+              class="rounded-full transition"
+              :class="seed === pendingSeed ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : 'ring-1 ring-border hover:ring-primary/50'"
+              aria-label="Usar este avatar"
+              @click="pendingSeed = seed"
+            >
+              <img :src="avatarUrl(seed)" alt="" class="size-12 rounded-full">
+            </button>
+          </div>
+
+          <Button size="sm" variant="outline" type="button" class="self-start" @click="regenerateAvatarOptions">
+            Gerar novas opções
+          </Button>
+
+          <div class="flex gap-2">
+            <Button size="sm" :disabled="!pendingSeed || savingAvatar" @click="handleSaveAvatar">
+              {{ savingAvatar ? 'Salvando...' : 'Salvar' }}
+            </Button>
+            <Button size="sm" variant="ghost" type="button" :disabled="savingAvatar" @click="handleCancelPicker">
+              Cancelar
+            </Button>
+          </div>
+        </div>
 
         <div class="flex flex-col gap-1">
           <span class="text-sm text-muted-foreground">Nome</span>
-          <span class="text-body text-foreground">{{ user?.displayName || '—' }}</span>
+
+          <div v-if="!editingName" class="flex items-center gap-2">
+            <span class="text-body text-foreground">{{ displayName || '—' }}</span>
+            <Button size="sm" variant="ghost" type="button" @click="handleOpenNameEdit">
+              Editar
+            </Button>
+          </div>
+
+          <div v-else class="flex flex-col gap-2">
+            <Input v-model="nameDraft" type="text" class="max-w-xs" placeholder="Seu nome" />
+            <div class="flex gap-2">
+              <Button size="sm" :disabled="!nameDraft.trim() || savingName" @click="handleSaveName">
+                {{ savingName ? 'Salvando...' : 'Salvar' }}
+              </Button>
+              <Button size="sm" variant="ghost" type="button" :disabled="savingName" @click="handleCancelNameEdit">
+                Cancelar
+              </Button>
+            </div>
+          </div>
         </div>
 
         <div class="flex flex-col gap-1">
@@ -82,13 +134,14 @@
 </template>
 
 <script setup lang="ts">
-import { sendEmailVerification } from 'firebase/auth'
+import { sendEmailVerification, updateProfile } from 'firebase/auth'
 
 useHead({
   title: 'Minha conta',
 })
 
 const user = useCurrentUser()
+const { avatarSeed, ready } = useUserProfile()
 
 const isMounted = ref(false)
 onMounted(() => {
@@ -96,10 +149,73 @@ onMounted(() => {
 })
 
 const emailVerified = ref(user.value?.emailVerified ?? false)
+const displayName = ref(user.value?.displayName ?? '')
 
 watch(user, (currentUser) => {
   emailVerified.value = currentUser?.emailVerified ?? false
+  displayName.value = currentUser?.displayName ?? ''
 }, { immediate: true })
+
+const editingName = ref(false)
+const nameDraft = ref('')
+const savingName = ref(false)
+
+function handleOpenNameEdit() {
+  nameDraft.value = displayName.value
+  editingName.value = true
+}
+
+function handleCancelNameEdit() {
+  editingName.value = false
+}
+
+async function handleSaveName() {
+  const trimmed = nameDraft.value.trim()
+  if (!user.value || !trimmed || savingName.value) return
+
+  savingName.value = true
+  try {
+    await updateProfile(user.value, { displayName: trimmed })
+    await setDisplayName(user.value.uid, trimmed)
+    displayName.value = trimmed
+    editingName.value = false
+  } finally {
+    savingName.value = false
+  }
+}
+
+const pickerOpen = ref(false)
+const avatarOptions = ref<string[]>([])
+const pendingSeed = ref<string | null>(null)
+const savingAvatar = ref(false)
+
+function regenerateAvatarOptions() {
+  avatarOptions.value = Array.from({ length: 6 }, () => randomAvatarSeed())
+  pendingSeed.value = null
+}
+
+function handleOpenPicker() {
+  pickerOpen.value = true
+  regenerateAvatarOptions()
+}
+
+function handleCancelPicker() {
+  pickerOpen.value = false
+  pendingSeed.value = null
+}
+
+async function handleSaveAvatar() {
+  if (!user.value || !pendingSeed.value) return
+
+  savingAvatar.value = true
+  try {
+    await setAvatarSeed(user.value.uid, pendingSeed.value)
+    pickerOpen.value = false
+    pendingSeed.value = null
+  } finally {
+    savingAvatar.value = false
+  }
+}
 
 const resending = ref(false)
 const resendMessage = ref('')
