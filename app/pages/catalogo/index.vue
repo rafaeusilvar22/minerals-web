@@ -116,12 +116,15 @@ function getCategoryBySlug(slug: string) {
 const route = useRoute();
 const searchQuery = computed(() => (typeof route.query.q === "string" ? route.query.q.trim() : ""));
 
-const selectedCategory = ref("todos");
-
 const categoryOptions = computed(() => [
   { value: "todos", label: "Todos" },
   ...allCategories.value.map((category) => ({ value: category.slug, label: category.name })),
 ]);
+
+const requestedCategory = typeof route.query.categoria === "string" ? route.query.categoria : "todos";
+const selectedCategory = ref(
+  categoryOptions.value.some((option) => option.value === requestedCategory) ? requestedCategory : "todos",
+);
 
 const filteredMinerals = computed(() => {
   const byCategory = selectedCategory.value === "todos"

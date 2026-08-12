@@ -268,8 +268,8 @@ async function handleLogout() {
 const navItems = [
   { label: 'Início', to: '/' },
   { label: 'Catálogo', to: '/catalogo' },
-  // { label: 'Categorias', to: '/categorias' },
-  // { label: 'Glossário', to: '/glossario' },
+  { label: 'Categorias', to: '/categorias' },
+  { label: 'Glossário', to: '/glossario' },
   { label: 'Sobre', to: '/sobre' },
 ]
 
