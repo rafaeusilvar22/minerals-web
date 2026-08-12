@@ -268,6 +268,56 @@
     </NuxtLink>
   </section>
 
+  <section v-if="isMounted && !user" class="py-12">
+    <Card class="overflow-hidden border-gold/30 bg-gradient-to-br from-accent/60 to-transparent">
+      <div class="grid gap-8 p-6 sm:p-8 lg:grid-cols-[1.5fr_1fr] lg:items-center">
+        <div class="flex flex-col gap-4">
+          <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-gold">
+            Crie sua conta
+          </span>
+          <div class="flex flex-col gap-2">
+            <h2 class="text-section-title font-heading text-foreground">
+              Organize sua coleção de minerais
+            </h2>
+            <p class="text-body text-muted-foreground">
+              Crie uma conta gratuita e leve o Magia Cristais com você.
+            </p>
+          </div>
+
+          <ul class="flex flex-col gap-3 pt-2">
+            <li class="flex items-center gap-3 text-body text-muted-foreground">
+              <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold">
+                <LucideHeart class="size-4" />
+              </span>
+              Marque minerais como "já tenho" ou "quero ter" e monte sua coleção
+            </li>
+            <li class="flex items-center gap-3 text-body text-muted-foreground">
+              <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold">
+                <LucideGem class="size-4" />
+              </span>
+              Acompanhe tudo em sua lista pessoal, organizada por categoria
+            </li>
+            <li class="flex items-center gap-3 text-body text-muted-foreground">
+              <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold">
+                <LucideUserCog class="size-4" />
+              </span>
+              Personalize seu perfil com um avatar único
+            </li>
+          </ul>
+        </div>
+
+        <div class="flex flex-col items-start gap-3 lg:items-end">
+          <Button as-child size="lg" class="w-full lg:w-auto">
+            <NuxtLink to="/cadastro">Criar conta grátis</NuxtLink>
+          </Button>
+          <Button as-child variant="link" class="px-0 text-muted-foreground hover:text-gold">
+            <NuxtLink to="/login">Já tem conta? Entrar</NuxtLink>
+          </Button>
+        </div>
+      </div>
+    </Card>
+  </section>
+
   <section class="flex flex-col gap-6 py-12">
     <div class="flex items-end justify-between gap-4">
       <div class="flex flex-col gap-1">
@@ -422,7 +472,11 @@ function focusSearchOnSlash(event: KeyboardEvent) {
   }
 }
 
+const user = useCurrentUser();
+const isMounted = ref(false);
+
 onMounted(() => {
+  isMounted.value = true;
   window.addEventListener("keydown", focusSearchOnSlash);
 });
 

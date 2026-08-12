@@ -1,12 +1,21 @@
 <template>
   <div class="flex flex-col gap-6 py-8">
-    <div class="flex flex-col gap-1">
-      <h1 class="text-section-title font-heading text-foreground">
-        Minha conta
-      </h1>
-      <p class="text-body text-muted-foreground">
-        Suas informações de acesso e segurança.
-      </p>
+    <div class="flex items-center justify-between gap-4">
+      <div class="flex flex-col gap-1">
+        <h1 class="text-section-title font-heading text-foreground">
+          Minha conta
+        </h1>
+        <p class="text-body text-muted-foreground">
+          Suas informações de acesso e segurança.
+        </p>
+      </div>
+
+      <Button variant="outline" as-child>
+        <NuxtLink to="/minha-lista">
+          <LucideGem />
+          Minha lista
+        </NuxtLink>
+      </Button>
     </div>
 
     <Card class="max-w-xl">
