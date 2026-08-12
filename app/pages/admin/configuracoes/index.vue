@@ -124,8 +124,8 @@ const aboutHtml = ref('')
 const aboutSaving = ref(false)
 const aboutError = ref('')
 
-// Sincroniza só até o fetch inicial terminar — depois disso o form é a fonte
-// da verdade, senão um fetch tardio sobrescreveria o que o admin já digitou.
+// Syncs only until the initial fetch finishes — after that the form is the
+// source of truth, otherwise a late fetch would overwrite what the admin already typed.
 const stopAboutSync = watch([aboutContent, aboutInitialized], ([value, ready]) => {
   if (!ready) return
   aboutHtml.value = value?.html ?? ''

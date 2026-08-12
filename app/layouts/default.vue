@@ -277,7 +277,7 @@ const footerLinks = [
     title: 'Sobre',
     links: [
       { label: 'O projeto', to: '/sobre' },
-      // Oculto por enquanto — reativar quando a página de contato estiver pronta.
+      // Hidden for now — re-enable once the contact page is ready.
       // { label: 'Contato', to: '/contato' },
     ],
   },

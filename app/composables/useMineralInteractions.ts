@@ -9,11 +9,11 @@ interface MineralInteraction {
 
 const INTERACTIONS_SUBCOLLECTION = 'mineralInteractions'
 
-// mineralId -> status, só do usuário atual
+// mineralId -> status, only for the current user
 const interactions = ref<Record<string, MineralStatus>>({})
 const loading = ref(false)
-// uid ao qual `interactions` corresponde — mesmo padrão de useUserProfile.ts,
-// já que o usuário logado pode trocar na mesma sessão.
+// uid `interactions` corresponds to — same pattern as useUserProfile.ts,
+// since the logged-in user can change within the same session.
 const loadedForUid = ref<string | null>(null)
 
 async function fetchInteractions(uid: string) {
@@ -37,8 +37,8 @@ async function fetchInteractions(uid: string) {
 export function useMineralInteractions() {
   const user = useCurrentUser()
 
-  // Disparado só após o mount: evita rodar no server (sem $db) e evita
-  // mismatch de hidratação (SSR sempre renderiza com loading/interactions vazios)
+  // Fired only after mount: avoids running on the server (no $db there) and
+  // avoids a hydration mismatch (SSR always renders with loading/interactions empty)
   onMounted(() => {
     watch(user, (currentUser) => {
       if (!currentUser) {

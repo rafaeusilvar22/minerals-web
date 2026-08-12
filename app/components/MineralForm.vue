@@ -597,7 +597,7 @@ async function handleStructureWithAI() {
     if (result.chakras.length) form.chakras = result.chakras
   }
   catch {
-    // aiError já é preenchido pelo composable
+    // aiError is already populated by the composable
   }
 }
 
@@ -723,7 +723,7 @@ async function handleImproveWithAI() {
     isImprovePreviewOpen.value = true
   }
   catch {
-    // improveError já é preenchido pelo composable
+    // improveError is already populated by the composable
   }
 }
 

@@ -26,8 +26,8 @@ async function fetchContent() {
 }
 
 export function useAboutContent() {
-  // Disparado só após o mount: evita rodar no server (sem $db) e evita
-  // mismatch de hidratação (SSR sempre renderiza com loading/content vazios)
+  // Fired only after mount: avoids running on the server (no $db there) and
+  // avoids a hydration mismatch (SSR always renders with loading/content empty)
   onMounted(() => {
     if (!initialized.value && !loading.value) {
       fetchContent()

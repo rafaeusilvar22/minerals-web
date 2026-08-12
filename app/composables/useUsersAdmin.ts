@@ -30,8 +30,8 @@ async function fetchAll() {
 }
 
 export function useUsersAdmin() {
-  // Disparado só após o mount: evita rodar no server (sem $db) e evita
-  // mismatch de hidratação (SSR sempre renderiza com loading/users vazios)
+  // Fired only after mount: avoids running on the server (no $db there) and
+  // avoids a hydration mismatch (SSR always renders with loading/users empty)
   onMounted(() => {
     if (!initialized.value && !loading.value) {
       fetchAll()

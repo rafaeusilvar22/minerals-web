@@ -14,8 +14,8 @@ const USERS_COLLECTION = 'users'
 
 const profile = ref<UserProfile | null>(null)
 const loading = ref(false)
-// uid ao qual o `profile` atual corresponde — diferente do `initialized` booleano
-// usado nas outras stores, porque aqui o usuário logado pode trocar na mesma sessão.
+// uid the current `profile` corresponds to — unlike the boolean `initialized`
+// used in the other stores, since here the logged-in user can change within the same session.
 const loadedForUid = ref<string | null>(null)
 
 async function fetchProfile(uid: string) {
@@ -31,8 +31,8 @@ async function fetchProfile(uid: string) {
   }
 }
 
-// Chamável fora de um contexto de componente (ex: middleware, que não tem
-// onMounted/watch disponíveis). Usa o cache de módulo quando possível.
+// Callable outside a component context (e.g. middleware, which has no
+// onMounted/watch available). Uses the module cache when possible.
 export async function resolveUserRole(uid: string): Promise<UserRole | null> {
   if (loadedForUid.value !== uid) {
     await fetchProfile(uid)
@@ -61,8 +61,8 @@ export async function setDisplayName(uid: string, displayName: string) {
 export function useUserProfile() {
   const user = useCurrentUser()
 
-  // Disparado só após o mount: evita rodar no server (sem $db) e evita
-  // mismatch de hidratação (SSR sempre renderiza com loading/profile vazios)
+  // Fired only after mount: avoids running on the server (no $db there) and
+  // avoids a hydration mismatch (SSR always renders with loading/profile empty)
   onMounted(() => {
     watch(user, (currentUser) => {
       if (!currentUser) {
@@ -79,12 +79,12 @@ export function useUserProfile() {
 
   const role = computed(() => profile.value?.role ?? null)
   const isAdmin = computed(() => role.value === 'admin')
-  // Cai pro uid enquanto o perfil não tem uma seed escolhida — mesmo avatar
-  // determinístico que já era usado antes dessa preferência existir.
+  // Falls back to the uid while the profile has no chosen seed yet — the same
+  // deterministic avatar that was already used before this preference existed.
   const avatarSeed = computed(() => profile.value?.avatarSeed || user.value?.uid || '')
-  // true só depois que o doc do Firestore já foi buscado pro uid atual — usado
-  // pra evitar mostrar o avatar/nome de fallback (uid/e-mail) por um instante
-  // antes da seed/displayName escolhidos chegarem.
+  // Only true once the Firestore doc has been fetched for the current uid — used
+  // to avoid showing the fallback avatar/name (uid/email) for an instant
+  // before the chosen seed/displayName arrive.
   const ready = computed(() => !!user.value && loadedForUid.value === user.value.uid)
 
   return { profile, role, isAdmin, loading, avatarSeed, ready }

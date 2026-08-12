@@ -1,7 +1,7 @@
 import type { User } from 'firebase/auth'
 
-// Estado alimentado uma única vez pelo listener onAuthStateChanged
-// registrado em plugins/firebase.client.ts
+// State populated once by the onAuthStateChanged listener
+// registered in plugins/firebase.client.ts
 export function useCurrentUser() {
   return useState<User | null>('firebase-user', () => null)
 }

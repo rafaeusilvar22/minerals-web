@@ -2,13 +2,13 @@
 import { onAuthStateChanged, type User } from 'firebase/auth'
 
 export default defineNuxtRouteMiddleware(async (to) => {
-  // O Firebase Auth só está disponível no cliente (plugin firebase.client.ts)
+  // Firebase Auth is only available on the client (firebase.client.ts plugin)
   if (import.meta.server) return
 
   const isAdminRoute = to.path.startsWith('/admin')
   const isLoginRoute = to.path === '/login'
   const isSignupRoute = to.path === '/cadastro'
-  // Rotas que só exigem estar logado (qualquer role), sem checagem extra.
+  // Routes that only require being logged in (any role), no extra check.
   const isAccountRoute = to.path === '/minha-conta' || to.path === '/minha-lista'
 
   if (!isAdminRoute && !isLoginRoute && !isSignupRoute && !isAccountRoute) return
