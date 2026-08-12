@@ -43,7 +43,8 @@
             <DropdownMenu>
               <DropdownMenuTrigger as-child>
                 <SidebarMenuButton tooltip="Conta">
-                  <LucideUser />
+                  <img v-if="isMounted && user" :src="avatarUrl(user.uid)" :alt="user.email ?? 'Avatar'" class="size-5 shrink-0 rounded-full">
+                  <LucideUser v-else />
                   <span v-if="isMounted && user" class="truncate group-data-[collapsible=icon]:hidden">
                     {{ user.email }}
                   </span>
@@ -55,6 +56,12 @@
                   {{ user.email }}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem as-child>
+                  <NuxtLink to="/minha-conta">
+                    <LucideUserCog />
+                    Minha conta
+                  </NuxtLink>
+                </DropdownMenuItem>
                 <DropdownMenuItem @click="handleLogout">
                   <LucideLogOut />
                   Sair
@@ -80,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-import { Diamond, LayoutDashboard, Settings, Tags } from '@lucide/vue'
+import { Diamond, LayoutDashboard, Settings, Tags, Users } from '@lucide/vue'
 import { signOut } from 'firebase/auth'
 
 const route = useRoute()
@@ -96,6 +103,7 @@ const navItems = [
   { label: 'Dashboard', to: '/admin/dashboard', icon: LayoutDashboard },
   { label: 'Minerais', to: '/admin/minerais', icon: Diamond },
   { label: 'Categorias', to: '/admin/categorias', icon: Tags },
+  { label: 'Usuários', to: '/admin/usuarios', icon: Users },
   { label: 'Configurações', to: '/admin/configuracoes', icon: Settings },
 ]
 

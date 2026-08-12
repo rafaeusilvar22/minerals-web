@@ -44,6 +44,13 @@
         <Button type="submit" class="mt-2 h-11 text-base" :disabled="loading">
           {{ loading ? 'Entrando...' : 'Entrar' }}
         </Button>
+
+        <p class="text-center text-sm text-muted-foreground">
+          Ainda não tem conta?
+          <NuxtLink :to="signupLink" class="font-medium text-foreground underline-offset-4 hover:underline">
+            Cadastre-se
+          </NuxtLink>
+        </p>
       </form>
     </CardContent>
   </Card>
@@ -69,6 +76,11 @@ const password = ref('')
 const error = ref('')
 const loading = ref(false)
 
+const signupLink = computed(() => ({
+  path: '/cadastro',
+  query: route.query.redirect ? { redirect: route.query.redirect } : undefined,
+}))
+
 const AUTH_ERROR_MESSAGES: Record<string, string> = {
   'auth/invalid-email': 'E-mail inválido.',
   'auth/invalid-credential': 'E-mail ou senha incorretos.',
@@ -81,10 +93,15 @@ async function handleSubmit() {
   loading.value = true
 
   try {
-    await signInWithEmailAndPassword($auth, email.value, password.value)
+    const credential = await signInWithEmailAndPassword($auth, email.value, password.value)
 
     const redirect = route.query.redirect
-    await navigateTo(typeof redirect === 'string' ? redirect : '/admin/dashboard')
+    if (typeof redirect === 'string') {
+      await navigateTo(redirect)
+    } else {
+      const role = await resolveUserRole(credential.user.uid)
+      await navigateTo(role === 'admin' ? '/admin/dashboard' : '/')
+    }
   } catch (err) {
     if (err instanceof FirebaseError) {
       error.value = AUTH_ERROR_MESSAGES[err.code] ?? 'Não foi possível entrar. Tente novamente.'

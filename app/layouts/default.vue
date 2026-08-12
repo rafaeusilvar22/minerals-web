@@ -39,7 +39,32 @@
         </NavigationMenu>
 
         <div class="flex items-center gap-1">
-          <Button variant="outline" size="sm" as-child class="hidden md:inline-flex">
+          <DropdownMenu v-if="isMounted && user">
+            <DropdownMenuTrigger as-child>
+              <Button variant="outline" size="sm" class="hidden md:inline-flex">
+                <img :src="avatarUrl(user.uid)" :alt="user.email ?? 'Avatar'" class="size-5 shrink-0 rounded-full">
+                <span class="max-w-32 truncate">{{ user.email }}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel class="truncate font-normal text-muted-foreground">
+                {{ user.email }}
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem as-child>
+                <NuxtLink to="/minha-conta">
+                  <LucideUserCog />
+                  Minha conta
+                </NuxtLink>
+              </DropdownMenuItem>
+              <DropdownMenuItem @click="handleLogout">
+                <LucideLogOut />
+                Sair
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Button v-else variant="outline" size="sm" as-child class="hidden md:inline-flex">
             <NuxtLink to="/login">
               Entrar
             </NuxtLink>
@@ -78,7 +103,33 @@
 
                 <Separator class="my-2" />
 
-                <DrawerClose as-child>
+                <template v-if="isMounted && user">
+                  <div class="px-3 py-2 text-sm text-muted-foreground truncate">
+                    {{ user.email }}
+                  </div>
+                  <DrawerClose as-child>
+                    <NuxtLink
+                      to="/minha-conta"
+                      class="rounded-lg px-3 py-2 text-sm font-medium"
+                      :class="route.path === '/minha-conta'
+                        ? 'bg-muted text-foreground'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'"
+                    >
+                      Minha conta
+                    </NuxtLink>
+                  </DrawerClose>
+                  <DrawerClose as-child>
+                    <button
+                      type="button"
+                      class="rounded-lg px-3 py-2 text-left text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                      @click="handleLogout"
+                    >
+                      Sair
+                    </button>
+                  </DrawerClose>
+                </template>
+
+                <DrawerClose v-else as-child>
                   <NuxtLink
                     to="/login"
                     class="rounded-lg px-3 py-2 text-sm font-medium"
@@ -141,22 +192,32 @@
 </template>
 
 <script setup lang="ts">
+import { signOut } from 'firebase/auth'
 
 const route = useRoute()
+const { $auth } = useNuxtApp()
+const user = useCurrentUser()
 
 const isScrolled = ref(false)
+const isMounted = ref(false)
 
 function handleScroll() {
   isScrolled.value = window.scrollY > 8
 }
 
 onMounted(() => {
+  isMounted.value = true
   window.addEventListener('scroll', handleScroll, { passive: true })
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
 })
+
+async function handleLogout() {
+  await signOut($auth)
+  await navigateTo('/')
+}
 
 const navItems = [
   { label: 'Início', to: '/' },

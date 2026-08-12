@@ -7,8 +7,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   const isAdminRoute = to.path.startsWith('/admin')
   const isLoginRoute = to.path === '/login'
+  const isSignupRoute = to.path === '/cadastro'
+  const isAccountRoute = to.path === '/minha-conta'
 
-  if (!isAdminRoute && !isLoginRoute) return
+  if (!isAdminRoute && !isLoginRoute && !isSignupRoute && !isAccountRoute) return
 
   const { $auth } = useNuxtApp()
 
@@ -19,11 +21,23 @@ export default defineNuxtRouteMiddleware(async (to) => {
     })
   })
 
-  if (isAdminRoute && !user) {
-    return navigateTo({ path: '/login', query: { redirect: to.fullPath } })
+  if (isAdminRoute) {
+    if (!user) {
+      return navigateTo({ path: '/login', query: { redirect: to.fullPath } })
+    }
+
+    const role = await resolveUserRole(user.uid)
+    if (role !== 'admin') {
+      return navigateTo('/')
+    }
   }
 
-  if (isLoginRoute && user) {
-    return navigateTo('/admin/dashboard')
+  if ((isLoginRoute || isSignupRoute) && user) {
+    const role = await resolveUserRole(user.uid)
+    return navigateTo(role === 'admin' ? '/admin/dashboard' : '/')
+  }
+
+  if (isAccountRoute && !user) {
+    return navigateTo({ path: '/login', query: { redirect: to.fullPath } })
   }
 })
