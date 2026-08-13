@@ -29,6 +29,7 @@ export default defineNuxtConfig({
   },
   sitemap: {
     exclude: ['/admin/**', '/login', '/cadastro', '/minha-conta', '/minha-lista', '/identificar/**', '/contato'],
+    sources: ['/api/__sitemap__/urls'],
   },
   css: ['~/assets/css/tailwind.css', 'vue-sonner/style.css'],
   vite: {
