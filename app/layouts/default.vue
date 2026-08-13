@@ -65,6 +65,15 @@
                   Minha conta
                 </NuxtLink>
               </DropdownMenuItem>
+              <template v-if="isAdmin">
+                <DropdownMenuSeparator />
+                <DropdownMenuItem as-child>
+                  <NuxtLink to="/admin/dashboard">
+                    <LucideLayoutDashboard />
+                    Painel administrativo
+                  </NuxtLink>
+                </DropdownMenuItem>
+              </template>
               <DropdownMenuItem @click="handleLogout">
                 <LucideLogOut />
                 Sair
@@ -154,6 +163,20 @@
                       Minha conta
                     </NuxtLink>
                   </DrawerClose>
+                  <template v-if="isAdmin">
+                    <Separator class="my-2" />
+                    <DrawerClose as-child>
+                      <NuxtLink
+                        to="/admin/dashboard"
+                        class="rounded-lg px-3 py-2 text-sm font-medium"
+                        :class="route.path.startsWith('/admin')
+                          ? 'bg-muted text-foreground'
+                          : 'text-muted-foreground hover:bg-muted hover:text-foreground'"
+                      >
+                        Painel administrativo
+                      </NuxtLink>
+                    </DrawerClose>
+                  </template>
                   <DrawerClose as-child>
                     <button
                       type="button"
@@ -239,7 +262,7 @@ import { toast } from 'vue-sonner'
 const route = useRoute()
 const { $auth } = useNuxtApp()
 const user = useCurrentUser()
-const { avatarSeed, profile, ready } = useUserProfile()
+const { avatarSeed, profile, ready, isAdmin } = useUserProfile()
 
 const isScrolled = ref(false)
 const isMounted = ref(false)

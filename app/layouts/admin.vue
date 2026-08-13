@@ -93,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-import { Diamond, LayoutDashboard, Settings, Tags, Users } from '@lucide/vue'
+import { BookOpen, Diamond, LayoutDashboard, Settings, Tags, Users } from '@lucide/vue'
 import { signOut } from 'firebase/auth'
 import { toast } from 'vue-sonner'
 
@@ -113,6 +113,7 @@ const navItems = [
   { label: 'Categorias', to: '/admin/categorias', icon: Tags },
   { label: 'Usuários', to: '/admin/usuarios', icon: Users },
   { label: 'Configurações', to: '/admin/configuracoes', icon: Settings },
+  { label: 'Documentação', to: '/admin/documentacao', icon: BookOpen },
 ]
 
 async function handleLogout() {
