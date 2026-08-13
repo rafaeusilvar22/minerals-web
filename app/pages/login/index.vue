@@ -59,6 +59,7 @@
 <script setup lang="ts">
 import { FirebaseError } from 'firebase/app'
 import { signInWithEmailAndPassword } from 'firebase/auth'
+import { toast } from 'vue-sonner'
 
 definePageMeta({
   layout: 'blank',
@@ -94,6 +95,8 @@ async function handleSubmit() {
 
   try {
     const credential = await signInWithEmailAndPassword($auth, email.value, password.value)
+
+    toast.success('Login realizado com sucesso!')
 
     const redirect = route.query.redirect
     if (typeof redirect === 'string') {

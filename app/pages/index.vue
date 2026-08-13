@@ -1,4 +1,5 @@
 <template>
+  <div>
   <section
     class="relative z-10 left-1/2 w-screen -translate-x-1/2 bg-cover bg-center"
     style="background-image: url('/images/ametista-background.webp');"
@@ -159,6 +160,20 @@
           </dd>
         </div>
       </dl>
+    </div>
+  </section>
+
+  <section v-if="phraseOfDay" class="py-12">
+    <div class="mx-auto flex max-w-3xl flex-col items-center gap-3 px-4 text-center">
+      <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-gold">
+        Frase do dia
+      </span>
+      <p class="text-section-title font-heading text-foreground">
+        "{{ phraseOfDay.text }}"
+      </p>
+      <span v-if="phraseOfDay.author" class="text-body text-muted-foreground">
+        — {{ phraseOfDay.author }}
+      </span>
     </div>
   </section>
 
@@ -365,6 +380,7 @@
       </NuxtLink>
     </div>
   </section>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -407,7 +423,17 @@ interface HomeData {
   featuredMineralId: string | null;
 }
 
+interface Phrase {
+  id: string;
+  text: string;
+  author?: string;
+}
+
 const { data: home } = await useAsyncData("home", () => $fetch<HomeData>("/api/home"));
+const { data: phraseData } = await useAsyncData("phraseOfDay", () =>
+  $fetch<{ phrase: Phrase | null }>("/api/phrase-of-day"),
+);
+const phraseOfDay = computed(() => phraseData.value?.phrase ?? null);
 
 const allMinerals = computed(() => home.value?.minerals ?? []);
 const allCategories = computed(() => home.value?.categories ?? []);

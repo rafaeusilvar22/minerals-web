@@ -46,11 +46,7 @@
                 <span class="max-w-32 truncate">{{ profile?.displayName || user.email }}</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel class="truncate font-normal text-muted-foreground">
-                {{ user.email }}
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
+            <DropdownMenuContent align="end" class="w-56">
               <DropdownMenuItem as-child>
                 <NuxtLink to="/minha-lista">
                   <LucideGem />
@@ -238,6 +234,7 @@
 
 <script setup lang="ts">
 import { signOut } from 'firebase/auth'
+import { toast } from 'vue-sonner'
 
 const route = useRoute()
 const { $auth } = useNuxtApp()
@@ -262,6 +259,7 @@ onUnmounted(() => {
 
 async function handleLogout() {
   await signOut($auth)
+  toast('Você saiu da sua conta.')
   await navigateTo('/')
 }
 

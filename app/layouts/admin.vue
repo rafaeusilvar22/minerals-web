@@ -95,6 +95,7 @@
 <script setup lang="ts">
 import { Diamond, LayoutDashboard, Settings, Tags, Users } from '@lucide/vue'
 import { signOut } from 'firebase/auth'
+import { toast } from 'vue-sonner'
 
 const route = useRoute()
 const { $auth } = useNuxtApp()
@@ -116,6 +117,7 @@ const navItems = [
 
 async function handleLogout() {
   await signOut($auth)
+  toast('Você saiu da sua conta.')
   await navigateTo('/login')
 }
 </script>

@@ -1,0 +1,293 @@
+// Script único para importar as frases do dia no Firestore.
+// Uso:
+//   ADMIN_EMAIL=voce@exemplo.com ADMIN_PASSWORD=suasenha node --env-file=.env scripts/import-phrases.mjs
+// Depois de rodar com sucesso, pode apagar este arquivo.
+
+import { initializeApp } from 'firebase/app'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { addDoc, collection, getFirestore } from 'firebase/firestore'
+
+const phrases = [
+  'Toda pedra guarda a memória da terra que a formou.',
+  'A cura começa onde a atenção se instala.',
+  'Cristais não criam magia, eles lembram você dela.',
+  'Silêncio é o solo onde a intuição floresce.',
+  'O que você busca fora já vibra dentro de você.',
+  'Cada mineral carrega um pedaço da paciência do tempo.',
+  'Energia não se perde, apenas muda de forma e de mão.',
+  'Ametista acalma a mente que insiste em correr.',
+  'A terra fala baixo, mas quem escuta encontra respostas.',
+  'Equilíbrio não é ausência de tempestade, é raiz firme nela.',
+  'Quartzo transparente ensina: clareza também é escolha diária.',
+  'O universo responde primeiro ao que você sente, não ao que você diz.',
+  'Toda pedra bruta já foi, um dia, apenas rocha esquecida.',
+  'Gratidão é o cristal mais raro e mais barato de se carregar.',
+  'A lua muda de fase, você também tem permissão para mudar.',
+  'Onde há intenção verdadeira, a energia encontra caminho.',
+  'Turmalina negra não afasta o mundo, ela filtra o que não é seu.',
+  'Renovar-se é um ritual, não um acidente.',
+  'A pedra mais poderosa é a que te lembra de respirar.',
+  'Nem toda jornada espiritual precisa de pressa.',
+  'Citrino guarda luz de sol para os dias sem sol.',
+  'Confiar no tempo certo é também uma forma de magia.',
+  'O que é seu por direito, o universo devolve com paciência.',
+  'Cada chakra é uma porta; abra devagar, uma de cada vez.',
+  'A pedra que você escolhe hoje diz mais sobre você do que sobre ela.',
+  'Enraizar-se é o primeiro passo para florescer alto.',
+  'Rosa quartzo lembra: o amor começa por dentro.',
+  'Existe força tranquila em quem sabe esperar a colheita.',
+  'O cosmos não erra o tempo de ninguém, inclusive o seu.',
+  'Toda transformação começa em pressão, como a de um diamante.',
+
+  // Cristais específicos
+  'Ametista transforma agitação em clareza, um pensamento de cada vez.',
+  'Quartzo rosa não ensina a amar os outros, ensina a começar por si.',
+  'Turmalina negra absorve o que pesa, para que você siga leve.',
+  'Citrino carrega o brilho que a noite tenta apagar.',
+  'Olho de tigre enxerga coragem onde só havia hesitação.',
+  'Labradorita guarda o mistério de quem ainda está se descobrindo.',
+  'Selenita limpa o que os dias deixam acumulado na alma.',
+  'Obsidiana é espelho: mostra a sombra para que você a atravesse.',
+  'Jaspe vermelho lembra o corpo de que ele também precisa de cuidado.',
+  'Água-marinha acalma como o mar depois da tempestade.',
+  'Malaquita transforma proteção em coragem para mudar.',
+  'Pirita não é ouro, mas ensina o valor de brilhar do seu jeito.',
+  'Ágata equilibra o que dentro de você ainda discute.',
+  'Lápis-lazúli abre a voz que ficou guardada por tempo demais.',
+  'Hematita ancora quem sente que está flutuando longe de si.',
+  'Sodalita organiza pensamentos como quem organiza uma casa.',
+  'Rodocrosita cura feridas antigas com a delicadeza que faltou antes.',
+  'Fluorita clareia decisões que a mente insiste em embaralhar.',
+  'Ônix protege sem endurecer o coração.',
+  'Pedra da lua acompanha as fases sem cobrar pressa de nenhuma.',
+
+  // Elementos e natureza
+  'A terra não empurra a semente, ela espera com confiança.',
+  'Água encontra caminho mesmo quando a pedra insiste em ficar no lugar.',
+  'Fogo transforma, mas também ilumina o que a escuridão escondia.',
+  'Ar carrega o que precisa ir embora, se você deixar.',
+  'Toda raiz cresce no escuro antes de ver a primeira luz.',
+  'A montanha não se apressa e ainda assim chega ao topo.',
+  'O rio não volta, e por isso segue em paz.',
+  'Nenhuma árvore floresce em todas as estações, e está tudo bem.',
+  'A natureza não pede desculpas por suas fases.',
+  'Uma tempestade também é a forma da terra se limpar.',
+  'O deserto ensina que até o silêncio tem vida.',
+  'Toda maré alta um dia recua, e isso não é perda.',
+  'A floresta cresce devagar, mas nunca para.',
+  'O vento não discute com a montanha, apenas contorna.',
+  'Onde a terra racha, é ali que a raiz mais se firma.',
+  'Nenhuma flor se compara à que floresceu ao lado.',
+  'O oceano guarda tempestades e calmarias sem deixar de ser um só.',
+  'A natureza não erra o tempo de florescer.',
+  'O sol nasce todo dia, mesmo depois da pior noite.',
+  'As estrelas mais brilhantes só aparecem quando escurece de verdade.',
+
+  // Lua, sol e ciclos
+  'A lua nova é convite, não vazio.',
+  'Toda lua cheia começou como um fio de luz.',
+  'Você não precisa estar cheio o tempo todo para brilhar.',
+  'Ciclos existem para lembrar que recomeçar também é sagrado.',
+  'A lua minguante ensina a soltar sem culpa.',
+  'O eclipse não apaga a luz, apenas a esconde por um instante.',
+  'Cada fase da lua é permissão para uma versão diferente de você.',
+  'O sol se põe todos os dias e ainda assim confiamos que volta.',
+  'Nem toda escuridão é ausência de luz, às vezes é apenas pausa.',
+  'O tempo entre uma lua e outra também é tempo de crescer.',
+  'Toda noite tem uma lua, mesmo quando as nuvens escondem.',
+  'Um novo ciclo não apaga o anterior, apenas soma experiência.',
+  'A lua não pede desculpas por mudar de forma.',
+  'O amanhecer não avisa, mas sempre chega.',
+  'Cada estação leva algo embora para abrir espaço ao que vem.',
+  'O inverno também é parte do jardim, mesmo sem flores.',
+  'Renovar-se com a lua é lembrar que você também tem fases.',
+  'Nenhum ciclo se repete exatamente igual, e isso é o que ensina.',
+  'A escuridão da lua nova é onde as intenções mais crescem.',
+  'O tempo não se apressa por ninguém, e talvez você também não precise.',
+
+  // Chakras e energia
+  'O chakra raiz pergunta: onde você se sente seguro?',
+  'Energia bloqueada não desaparece, apenas espera ser ouvida.',
+  'O chakra cardíaco não separa o amor que dá do que recebe.',
+  'Alinhar-se não é ficar perfeito, é ficar inteiro.',
+  'O chakra da garganta cresce toda vez que uma verdade é dita.',
+  'Sentir a própria energia é o primeiro passo para cuidar dela.',
+  'O chakra do plexo solar guarda a coragem que você já tem.',
+  'Energia limpa não é energia sem história, é energia sem peso extra.',
+  'O terceiro olho enxerga o que os olhos comuns ainda não veem.',
+  'O chakra sacral lembra que criar também é uma forma de cura.',
+  'Nem toda energia pesada é sua, algumas você só está carregando.',
+  'O chakra coronário conecta o que é seu ao que é maior que você.',
+  'Equilibrar os chakras é lembrar o corpo de que ele é um só sistema.',
+  'A energia que você emite volta, ainda que em outra forma.',
+  'Aterrar-se é a primeira resposta para qualquer tempestade interna.',
+  'Um corpo alinhado começa por uma respiração alinhada.',
+  'Vibração alta não é ausência de dor, é presença apesar dela.',
+  'Toda cura de energia começa pela permissão de sentir.',
+  'O que circula livre não estagna, nem no corpo nem na vida.',
+  'Cuidar da energia é cuidar do espaço antes de cuidar da forma.',
+
+  // Signos e astrologia
+  'Cada signo carrega um jeito diferente de amar o mundo.',
+  'O mapa astral não decide seu destino, apenas descreve seu ponto de partida.',
+  'Áries começa; Peixes entrega. Entre os dois, o zodíaco inteiro aprende.',
+  'Nenhum signo é fraco, cada um tem sua força em silêncio.',
+  'Mercúrio retrógrado não cria o caos, só revela o que já estava frágil.',
+  'O elemento do seu signo diz mais sobre você do que qualquer previsão.',
+  'Touro ensina paciência onde o mundo pede pressa.',
+  'Escorpião não teme o fundo, é ali que encontra verdade.',
+  'Cada casa do mapa astral é um cômodo da própria história.',
+  'Sagitário lembra que também é preciso soltar para encontrar.',
+  'Câncer prova que sensibilidade também é força.',
+  'As estrelas não escrevem seu futuro, só emprestam luz para o caminho.',
+  'Leão brilha, mas o verdadeiro brilho está em deixar os outros brilharem também.',
+  'Aquário sonha o futuro antes de todo mundo estar pronto.',
+  'Cada trânsito planetário é um convite, nunca uma sentença.',
+  'Virgem cuida dos detalhes que sustentam o todo.',
+  'Gêmeos ensina que contradição também pode ser inteireza.',
+  'Libra busca equilíbrio, mesmo quando o mundo empurra para um lado.',
+  'Capricórnio constrói devagar o que dura.',
+  'Peixes sente o que ainda não tem nome.',
+
+  // Autoconhecimento e intuição
+  'Intuição não grita, ela sussurra e espera você escolher ouvir.',
+  'Conhecer-se é o ritual mais longo e mais necessário.',
+  'A resposta certa quase sempre já mora dentro de você.',
+  'Autoconhecimento não é chegar a um lugar, é revisitar o caminho.',
+  'O corpo sabe antes da mente aceitar.',
+  'Escutar-se é o primeiro passo antes de pedir ao universo.',
+  'Nem toda dúvida precisa de resposta imediata.',
+  'Confiar em si é também aceitar não saber tudo ainda.',
+  'A intuição fala na linguagem do silêncio.',
+  'Você não precisa se explicar para seguir o que sente.',
+  'Todo caminho externo começa com uma pergunta interna.',
+  'Conhecer as próprias sombras é abrir espaço para a própria luz.',
+  'A voz mais importante é a que você escuta quando ninguém mais fala.',
+  'Nem tudo que se sente precisa ser justificado com lógica.',
+  'Autoconfiança cresce a cada vez que você escolhe se ouvir primeiro.',
+  'O corpo é o primeiro oráculo, antes de qualquer carta ou pedra.',
+  'Existe sabedoria em admitir que ainda está aprendendo sobre si.',
+  'A intuição não erra, às vezes só chega antes da certeza.',
+  'Cada silêncio guardado é espaço para uma verdade nova.',
+  'Você não precisa ter todas as respostas para confiar no próprio caminho.',
+
+  // Cura e equilíbrio
+  'Curar não é apagar a dor, é aprender a carregá-la de outro jeito.',
+  'O tempo da cura não é o tempo do calendário.',
+  'Toda ferida cicatriza no seu próprio ritmo, não no que os outros esperam.',
+  'Equilíbrio não é estar bem o tempo todo, é voltar ao centro com mais rapidez.',
+  'Cuidar de si não é luxo, é manutenção.',
+  'Nem toda cura é visível de fora.',
+  'O corpo guarda o que a mente tenta esquecer, por isso ele também precisa de cuidado.',
+  'Descansar também é parte do processo, não interrupção dele.',
+  'A cura mais profunda acontece quando você para de se culpar pela dor.',
+  'Toda queda tem um tempo de levantar que não pode ser apressado.',
+  'O equilíbrio não é uma linha reta, é um pêndulo que aprende a voltar.',
+  'Perdoar a si mesmo é o primeiro passo de qualquer cura de verdade.',
+  'Nem sempre curar significa voltar ao que era antes.',
+  'O silêncio também cura, quando é escolhido e não imposto.',
+  'Toda dor tem um recado, mesmo quando ainda não sabemos ler.',
+  'A cura não pede pressa, pede presença.',
+  'Aceitar o que dói é o começo de deixar de doer tanto.',
+  'O corpo se equilibra quando a mente para de o interromper.',
+  'Cuidar de si em pequenas doses é o que sustenta as grandes mudanças.',
+  'Nem toda cicatriz precisa desaparecer para significar cura.',
+
+  // Gratidão e abundância
+  'Gratidão transforma o pouco em suficiente.',
+  'Abundância começa no reconhecimento do que já existe.',
+  'Agradecer pelo caminho é também abrir espaço para o que ainda vem.',
+  'O universo escuta gratidão antes de escutar pedidos.',
+  'Nem toda riqueza se mede em posse.',
+  'Abundância também é tempo, saúde e paz, não só dinheiro.',
+  'Gratidão diária muda a forma como os dias são vividos.',
+  'O que você celebra hoje se multiplica amanhã.',
+  'Reconhecer o que já se tem é o primeiro passo para receber mais.',
+  'A escassez vive na mente antes de existir na realidade.',
+  'Cada pequeno agradecimento é uma semente plantada no invisível.',
+  'Prosperidade também é liberdade de escolher.',
+  'Quem cultiva gratidão colhe leveza, mesmo nos dias difíceis.',
+  'O universo não devolve o que você pede, devolve o que você emite.',
+  'Abundância não compete, ela expande.',
+  'Agradecer pelo simples é onde a magia realmente mora.',
+  'Riqueza interior sustenta qualquer riqueza externa.',
+  'O que falta hoje já foi suficiente em algum outro dia.',
+  'Toda colheita começa numa semente pequena e ignorada.',
+  'Gratidão é a ponte entre o que você tem e o que ainda vai receber.',
+
+  // Transformação e renascimento
+  'Toda transformação exige um pouco de escuridão antes da luz.',
+  'Você não precisa se destruir para se reinventar.',
+  'Renascer não apaga quem você foi, apenas soma quem você se tornou.',
+  'A borboleta não se lembra da lagarta com vergonha.',
+  'Mudar de direção não é fraqueza, é coragem disfarçada de recomeço.',
+  'Toda queda também é uma forma de plantar raízes novas.',
+  'O que parece fim, muitas vezes, é só uma nova forma começando.',
+  'Transformar-se dói porque é real, não porque está errado.',
+  'Nenhuma metamorfose acontece sem tempo no casulo.',
+  'Recomeçar não é fraqueza, é coragem em movimento.',
+  'A serpente troca de pele sem deixar de ser serpente.',
+  'Toda crise carrega, escondida, uma oportunidade de recomeço.',
+  'Você pode se reinventar quantas vezes o tempo pedir.',
+  'Nem toda perda é definitiva, algumas são apenas transição.',
+  'O fogo que queima também é o que forja o metal.',
+  'Renovar-se é escolher, todos os dias, quem você quer se tornar.',
+  'Sair da zona de conforto é o primeiro passo de qualquer transformação real.',
+  'O que morre em você abre espaço para o que ainda vai nascer.',
+  'Toda mudança profunda começa incômoda antes de começar boa.',
+  'Você é, ao mesmo tempo, resultado do passado e rascunho do futuro.',
+
+  // Presença, silêncio e respiração
+  'Respirar fundo é o ritual mais acessível de todos.',
+  'O presente não pede pressa, só atenção.',
+  'Silêncio não é vazio, é espaço para o que realmente importa.',
+  'Estar presente é o único jeito de realmente estar em algum lugar.',
+  'Uma respiração consciente já é, por si só, um pequeno ritual sagrado.',
+  'Parar por um instante não é perder tempo, é reencontrá-lo.',
+  'O agora é o único lugar onde a vida realmente acontece.',
+  'Nem toda resposta precisa ser imediata, algumas pedem silêncio antes.',
+  'Presença é o presente mais simples que você pode dar a si mesmo.',
+  'O ruído do mundo diminui quando o silêncio interno cresce.',
+  'Um minuto de pausa muda o tom do dia inteiro.',
+  'A mente se acalma no mesmo ritmo em que a respiração se aprofunda.',
+  'Estar aqui, agora, já é suficiente.',
+  'O silêncio ensina o que a pressa nunca vai conseguir ensinar.',
+  'Cada respiração é um novo começo, mesmo dentro do mesmo dia.',
+  'Presença não exige perfeição, só atenção.',
+  'O momento presente não compara, ele apenas acontece.',
+  'Um instante de quietude vale mais que mil respostas apressadas.',
+  'A vida se revela nos detalhes que só a presença percebe.',
+  'Não é preciso ir a lugar nenhum para se encontrar, basta parar.',
+]
+
+const email = process.env.ADMIN_EMAIL
+const password = process.env.ADMIN_PASSWORD
+
+if (!email || !password) {
+  console.error('Defina ADMIN_EMAIL e ADMIN_PASSWORD (de uma conta com role "admin") antes de rodar.')
+  process.exit(1)
+}
+
+const app = initializeApp({
+  apiKey: process.env.NUXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NUXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NUXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NUXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NUXT_PUBLIC_FIREBASE_APP_ID,
+})
+
+const auth = getAuth(app)
+const db = getFirestore(app)
+
+await signInWithEmailAndPassword(auth, email, password)
+
+let count = 0
+for (const text of phrases) {
+  await addDoc(collection(db, 'phrases'), { text })
+  count += 1
+  console.log(`(${count}/${phrases.length}) importada: ${text}`)
+}
+
+console.log('Concluído.')
+process.exit(0)
