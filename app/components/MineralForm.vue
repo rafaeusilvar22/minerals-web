@@ -401,10 +401,10 @@
 
 <script setup lang="ts">
 import type { ImprovedMineralFields } from '~/composables/useMineralAI'
-import type { Mineral } from '~/composables/useMineralsStore'
+import type { MineralInput } from '~/composables/useMineralsStore'
 
 const props = withDefaults(defineProps<{
-  initialValue?: Omit<Mineral, 'id'>
+  initialValue?: MineralInput
   submitLabel?: string
   saving?: boolean
   formError?: string
@@ -416,7 +416,7 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{
-  submit: [value: Omit<Mineral, 'id'>]
+  submit: [value: MineralInput]
 }>()
 
 const { categories } = useCategoriesStore()
@@ -467,7 +467,7 @@ const colorPalette = [
   { label: 'Vermelho', value: 'Vermelho', hex: '#dc2626' },
 ]
 
-const form = reactive<Omit<Mineral, 'id'>>({
+const form = reactive<MineralInput>({
   name: props.initialValue?.name ?? '',
   categorySlug: props.initialValue?.categorySlug ?? '',
   hardnessMin: props.initialValue?.hardnessMin ?? 1,

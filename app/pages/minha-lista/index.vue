@@ -34,7 +34,7 @@
           <NuxtLink
             v-for="mineral in haveMinerals"
             :key="mineral.id"
-            :to="`/minerais/${mineral.id}`"
+            :to="`/minerais/${mineral.slug}`"
             class="block min-w-0 transition-transform hover:-translate-y-0.5"
           >
             <MineralCard
@@ -59,7 +59,7 @@
           <NuxtLink
             v-for="mineral in wantMinerals"
             :key="mineral.id"
-            :to="`/minerais/${mineral.id}`"
+            :to="`/minerais/${mineral.slug}`"
             class="block min-w-0 transition-transform hover:-translate-y-0.5"
           >
             <MineralCard

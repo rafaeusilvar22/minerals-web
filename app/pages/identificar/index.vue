@@ -34,7 +34,7 @@
                 <NuxtLink
                   v-for="candidate in entry.candidates"
                   :key="candidate.mineralId"
-                  :to="`/minerais/${candidate.mineralId}`"
+                  :to="`/minerais/${getMineralSlug(candidate.mineralId)}`"
                   class="text-sm font-medium text-foreground hover:text-gold"
                 >
                   {{ getMineralName(candidate.mineralId) }}
@@ -141,7 +141,7 @@
       <div v-if="phase === 'results'" class="flex flex-col gap-6">
         <div v-if="candidates.length" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <div v-for="candidate in candidates" :key="candidate.mineral.id" class="flex flex-col gap-2">
-            <NuxtLink :to="`/minerais/${candidate.mineral.id}`" class="block min-w-0 transition-transform hover:-translate-y-0.5">
+            <NuxtLink :to="`/minerais/${candidate.mineral.slug}`" class="block min-w-0 transition-transform hover:-translate-y-0.5">
               <MineralCard
                 :id="candidate.mineral.id"
                 :name="candidate.mineral.name"
@@ -226,6 +226,10 @@ onMounted(() => {
 
 function getMineralName(mineralId: string) {
   return getMineralById(mineralId)?.name ?? 'Mineral removido'
+}
+
+function getMineralSlug(mineralId: string) {
+  return getMineralById(mineralId)?.slug ?? mineralId
 }
 
 function formatDate(timestamp: IdentificationHistoryEntry['createdAt']) {

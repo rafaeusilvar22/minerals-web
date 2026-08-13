@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Mineral } from '~/composables/useMineralsStore'
+import type { MineralInput } from '~/composables/useMineralsStore'
 
 definePageMeta({
   layout: 'admin',
@@ -33,7 +33,7 @@ const { create } = useMineralsStore()
 const saving = ref(false)
 const formError = ref('')
 
-async function handleSubmit(data: Omit<Mineral, 'id'>) {
+async function handleSubmit(data: MineralInput) {
   saving.value = true
   formError.value = ''
 

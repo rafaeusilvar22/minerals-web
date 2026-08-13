@@ -71,7 +71,7 @@
                   <NuxtLink
                     v-for="candidate in entry.candidates"
                     :key="candidate.mineralId"
-                    :to="`/minerais/${candidate.mineralId}`"
+                    :to="`/minerais/${getMineralSlug(candidate.mineralId)}`"
                     class="text-sm font-medium text-foreground hover:text-gold"
                   >
                     {{ getMineralName(candidate.mineralId) }}
@@ -119,6 +119,10 @@ onMounted(() => {
 
 function getMineralName(mineralId: string) {
   return getMineralById(mineralId)?.name ?? 'Mineral removido'
+}
+
+function getMineralSlug(mineralId: string) {
+  return getMineralById(mineralId)?.slug ?? mineralId
 }
 
 function formatDate(timestamp: IdentificationHistoryEntry['createdAt']) {

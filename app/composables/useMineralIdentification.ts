@@ -3,6 +3,7 @@ export type IdentificationConfidence = 'alta' | 'média' | 'baixa'
 export interface IdentifiedCandidate {
   mineral: {
     id: string
+    slug: string
     name: string
     description: string
     images: string[]

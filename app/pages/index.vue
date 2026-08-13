@@ -104,7 +104,7 @@
             :value="result.id"
             :text-value="result.name"
             class="flex items-center gap-3 rounded-none px-4 py-2.5"
-            @select="goToMineral(result.id)"
+            @select="goToMineral(result.slug)"
           >
             <span
               class="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted"
@@ -179,7 +179,7 @@
 
   <section v-if="featuredMineral" id="mineral-do-dia" class="relative left-1/2 w-screen -translate-x-1/2 bg-accent">
     <NuxtLink
-      :to="`/minerais/${featuredMineral.id}`"
+      :to="`/minerais/${featuredMineral.slug}`"
       class="mx-auto grid max-w-6xl gap-10 px-4 py-12 transition-opacity hover:opacity-90 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-16"
     >
       <div class="relative rounded-2xl bg-gradient-to-br from-gold via-primary/50 to-gold p-[2px]">
@@ -367,7 +367,7 @@
       <NuxtLink
         v-for="mineral in visibleMinerals"
         :key="mineral.id"
-        :to="`/minerais/${mineral.id}`"
+        :to="`/minerais/${mineral.slug}`"
         class="block min-w-0 transition-transform hover:-translate-y-0.5"
       >
         <MineralCard
@@ -543,9 +543,9 @@ watch(searchQuery, (value) => {
   runSearch(term);
 });
 
-function goToMineral(id: string) {
+function goToMineral(slug: string) {
   isSearchOpen.value = false;
   searchQuery.value = "";
-  navigateTo(`/minerais/${id}`);
+  navigateTo(`/minerais/${slug}`);
 }
 </script>

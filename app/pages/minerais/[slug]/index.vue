@@ -65,7 +65,7 @@
           {{ mineral.name }}
         </h1>
 
-        <MineralStatusToggle :mineral-id="mineralId" :name="mineral.name" />
+        <MineralStatusToggle :mineral-id="mineral.id" :name="mineral.name" />
 
         <div class="grid grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-3">
           <div v-if="mineral.waterproof !== undefined" class="flex flex-col gap-1">
@@ -165,11 +165,11 @@ interface MineralWithCategory extends Mineral {
 }
 
 const route = useRoute()
-const mineralId = String(route.params.id)
+const slug = String(route.params.slug)
 
 const { data: mineral, pending } = await useAsyncData(
-  `mineral-${mineralId}`,
-  () => $fetch<MineralWithCategory>(`/api/minerals/${mineralId}`),
+  `mineral-${slug}`,
+  () => $fetch<MineralWithCategory>(`/api/minerals/${slug}`),
 )
 
 if (!pending.value && !mineral.value) {

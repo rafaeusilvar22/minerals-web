@@ -1,22 +1,25 @@
-import { collection, doc, getDoc, getDocs, limit, query, where } from 'firebase/firestore'
+import { collection, getDocs, limit, query, where } from 'firebase/firestore'
 
 export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, 'id')
+  const slug = getRouterParam(event, 'slug')
 
-  if (!id) {
-    throw createError({ statusCode: 400, statusMessage: 'ID do mineral não informado.' })
+  if (!slug) {
+    throw createError({ statusCode: 400, statusMessage: 'Mineral não informado.' })
   }
 
   const db = useServerFirestore()
-  const snapshot = await getDoc(doc(db, 'minerals', id))
+  const snapshot = await getDocs(
+    query(collection(db, 'minerals'), where('slug', '==', slug), limit(1)),
+  )
+  const mineralDoc = snapshot.docs[0]
 
-  if (!snapshot.exists()) {
+  if (!mineralDoc) {
     throw createError({ statusCode: 404, statusMessage: 'Mineral não encontrado.' })
   }
 
   setResponseHeader(event, 'cache-control', 'public, max-age=0, s-maxage=600, stale-while-revalidate=86400')
 
-  const mineral = { id: snapshot.id, ...snapshot.data() } as { categorySlug: string }
+  const mineral = { id: mineralDoc.id, ...mineralDoc.data() } as { categorySlug: string }
 
   const categorySnapshot = await getDocs(
     query(collection(db, 'mineralCategories'), where('slug', '==', mineral.categorySlug), limit(1)),

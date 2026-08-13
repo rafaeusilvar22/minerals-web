@@ -10,12 +10,17 @@
         </p>
       </div>
 
-      <Button as-child>
-        <NuxtLink to="/admin/minerais/novo">
-          <LucidePlus class="size-4" />
-          Novo mineral
-        </NuxtLink>
-      </Button>
+      <div class="flex items-center gap-2">
+        <Button v-if="pendingSlugCount > 0" variant="outline" :disabled="backfilling" @click="runBackfill">
+          {{ backfilling ? 'Gerando...' : `Gerar slugs pendentes (${pendingSlugCount})` }}
+        </Button>
+        <Button as-child>
+          <NuxtLink to="/admin/minerais/novo">
+            <LucidePlus class="size-4" />
+            Novo mineral
+          </NuxtLink>
+        </Button>
+      </div>
     </div>
 
     <div class="overflow-hidden rounded-2xl border border-border">
@@ -79,7 +84,7 @@
               <TableCell>
                 <div class="flex justify-end gap-1">
                   <Button variant="ghost" size="icon-sm" aria-label="Ver mineral publicado" title="Ver mineral publicado" as-child>
-                    <NuxtLink :to="`/minerais/${mineral.id}`" target="_blank">
+                    <NuxtLink :to="`/minerais/${mineral.slug}`" target="_blank">
                       <LucideExternalLink class="size-4" />
                     </NuxtLink>
                   </Button>
@@ -103,6 +108,7 @@
 
 <script setup lang="ts">
 import type { Mineral } from '~/composables/useMineralsStore'
+import { toast } from 'vue-sonner'
 
 definePageMeta({
   layout: 'admin',
@@ -112,8 +118,25 @@ useHead({
   title: 'Minerais · Dashboard',
 })
 
-const { minerals, loading, remove } = useMineralsStore()
+const { minerals, loading, remove, backfillMissingSlugs } = useMineralsStore()
 const { getBySlug: getCategory } = useCategoriesStore()
+
+const pendingSlugCount = computed(() => minerals.value.filter(mineral => !mineral.slug).length)
+const backfilling = ref(false)
+
+async function runBackfill() {
+  backfilling.value = true
+  try {
+    const count = await backfillMissingSlugs()
+    toast.success(`${count} mineral(is) atualizado(s) com slug.`)
+  }
+  catch {
+    toast.error('Não foi possível gerar os slugs. Tente novamente.')
+  }
+  finally {
+    backfilling.value = false
+  }
+}
 
 function formatHardness(mineral: Mineral) {
   return mineral.hardnessMin === mineral.hardnessMax

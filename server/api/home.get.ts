@@ -2,6 +2,7 @@ import { collection, doc, getDoc, getDocs, orderBy, query, type Timestamp } from
 
 interface MineralRecord {
   id: string
+  slug: string
   name: string
   categorySlug: string
   hardnessMin: number

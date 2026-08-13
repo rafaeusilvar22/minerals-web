@@ -2,6 +2,7 @@ import { collection, getDocs } from 'firebase/firestore'
 import type { SitemapUrlInput } from '#sitemap/types'
 
 interface MineralRecord {
+  slug: string
   name: string
   images: string[]
 }
@@ -14,7 +15,7 @@ export default defineSitemapEventHandler(async (): Promise<SitemapUrlInput[]> =>
     const mineral = document.data() as MineralRecord
 
     return {
-      loc: `/minerais/${document.id}`,
+      loc: `/minerais/${mineral.slug}`,
       images: mineral.images?.map(image => ({ loc: image, title: mineral.name })) ?? [],
     }
   })

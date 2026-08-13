@@ -1,7 +1,9 @@
 import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore'
+import { slugify } from '~/utils/slug'
 
 export interface Mineral {
   id: string
+  slug: string
   name: string
   categorySlug: string
   hardnessMin: number
@@ -16,6 +18,8 @@ export interface Mineral {
   planet: string
   chakras: string[]
 }
+
+export type MineralInput = Omit<Mineral, 'id' | 'slug'>
 
 const MINERALS_COLLECTION = 'minerals'
 
@@ -53,15 +57,31 @@ export function useMineralsStore() {
     minerals.value.sort((a, b) => a.name.localeCompare(b.name))
   }
 
-  async function create(data: Omit<Mineral, 'id'>) {
+  function uniqueSlug(name: string) {
+    const base = slugify(name)
+    const taken = new Set(minerals.value.map(mineral => mineral.slug))
+
+    if (!taken.has(base)) {
+      return base
+    }
+
+    let suffix = 2
+    while (taken.has(`${base}-${suffix}`)) {
+      suffix += 1
+    }
+    return `${base}-${suffix}`
+  }
+
+  async function create(data: MineralInput) {
     const { $db } = useNuxtApp()
-    const docRef = await addDoc(collection($db, MINERALS_COLLECTION), data)
-    minerals.value.push({ id: docRef.id, ...data })
+    const slug = uniqueSlug(data.name)
+    const docRef = await addDoc(collection($db, MINERALS_COLLECTION), { ...data, slug })
+    minerals.value.push({ id: docRef.id, slug, ...data })
     sortByName()
     return docRef.id
   }
 
-  async function update(id: string, data: Omit<Mineral, 'id'>) {
+  async function update(id: string, data: MineralInput) {
     const { $db } = useNuxtApp()
     await updateDoc(doc($db, MINERALS_COLLECTION, id), data)
 
@@ -70,6 +90,21 @@ export function useMineralsStore() {
       Object.assign(mineral, data)
       sortByName()
     }
+  }
+
+  async function backfillMissingSlugs() {
+    const { $db } = useNuxtApp()
+    const pending = minerals.value.filter(mineral => !mineral.slug)
+
+    // Sequential: uniqueSlug() needs each mineral's slug already assigned
+    // to avoid handing out the same slug twice in this batch.
+    for (const mineral of pending) {
+      const slug = uniqueSlug(mineral.name)
+      await updateDoc(doc($db, MINERALS_COLLECTION, mineral.id), { slug })
+      mineral.slug = slug
+    }
+
+    return pending.length
   }
 
   async function remove(id: string) {
@@ -82,5 +117,5 @@ export function useMineralsStore() {
     }
   }
 
-  return { minerals, loading, fetchAll, getById, create, update, remove }
+  return { minerals, loading, fetchAll, getById, create, update, remove, backfillMissingSlugs }
 }

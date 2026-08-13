@@ -45,7 +45,7 @@
         <NuxtLink
           v-for="mineral in pagedMinerals"
           :key="mineral.id"
-          :to="`/minerais/${mineral.id}`"
+          :to="`/minerais/${mineral.slug}`"
           class="block min-w-0 transition-transform hover:-translate-y-0.5"
         >
           <MineralCard

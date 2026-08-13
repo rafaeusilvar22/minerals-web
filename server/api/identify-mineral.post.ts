@@ -6,6 +6,7 @@ interface IdentifyMineralPayload {
 
 interface MineralRecord {
   id: string
+  slug: string
   name: string
   categorySlug: string
   description: string
@@ -154,6 +155,7 @@ Responda APENAS com um JSON válido no formato:
       return {
         mineral: {
           id: mineral.id,
+          slug: mineral.slug,
           name: mineral.name,
           description: mineral.description,
           images: mineral.images,

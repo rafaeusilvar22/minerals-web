@@ -2,6 +2,7 @@ import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 
 interface MineralRecord {
   id: string
+  slug: string
   name: string
   categorySlug: string
   hardnessMin: number
