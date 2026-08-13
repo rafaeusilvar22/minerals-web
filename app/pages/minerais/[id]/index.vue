@@ -176,15 +176,29 @@ if (!pending.value && !mineral.value) {
   throw createError({ statusCode: 404, statusMessage: 'Mineral não encontrado.', fatal: true })
 }
 
-useHead({
-  title: () => mineral.value ? `${mineral.value.name} · Magia Cristais` : 'Mineral · Magia Cristais',
-  meta: [
-    {
-      name: 'description',
-      content: () => mineral.value?.description ?? 'Detalhes do mineral.',
-    },
-  ],
-})
+useSeo(() => ({
+  title: mineral.value ? `${mineral.value.name} · Magia Cristais` : 'Mineral · Magia Cristais',
+  description: mineral.value?.description ?? 'Detalhes do mineral.',
+  image: mineral.value?.images?.[0],
+}))
+
+useHead(() => ({
+  script: mineral.value
+    ? [
+        {
+          type: 'application/ld+json',
+          innerHTML: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: mineral.value.name,
+            description: mineral.value.description,
+            image: mineral.value.images,
+            category: mineral.value.category?.name,
+          }),
+        },
+      ]
+    : [],
+}))
 
 function formatHardness(value: { hardnessMin: number, hardnessMax: number }) {
   return value.hardnessMin === value.hardnessMax

@@ -1,2 +1,10 @@
 User-Agent: *
-Disallow:
+Disallow: /admin
+Disallow: /login
+Disallow: /cadastro
+Disallow: /minha-conta
+Disallow: /minha-lista
+Disallow: /identificar
+Disallow: /contato
+
+Sitemap: https://magiacristais.com.br/sitemap.xml

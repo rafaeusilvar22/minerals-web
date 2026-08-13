@@ -59,14 +59,9 @@
 </template>
 
 <script setup lang="ts">
-useHead({
+useSeo({
   title: 'Sistemas cristalinos · Magia Cristais',
-  meta: [
-    {
-      name: 'description',
-      content: 'Conheça os sete sistemas cristalinos e como eles definem a forma dos minerais.',
-    },
-  ],
+  description: 'Conheça os sete sistemas cristalinos e como eles definem a forma dos minerais.',
 })
 
 interface CrystalSystem {

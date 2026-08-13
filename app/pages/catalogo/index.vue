@@ -88,14 +88,9 @@ import type { Category } from "~/composables/useCategoriesStore";
 import type { Mineral } from "~/composables/useMineralsStore";
 import { normalizeSearchText } from "~/lib/utils";
 
-useHead({
+useSeo({
   title: "Catálogo · Magia Cristais",
-  meta: [
-    {
-      name: "description",
-      content: "Navegue pela coleção completa de minerais e pedras naturais.",
-    },
-  ],
+  description: "Navegue pela coleção completa de minerais e pedras naturais.",
 });
 
 interface HomeData {

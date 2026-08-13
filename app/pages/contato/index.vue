@@ -8,3 +8,11 @@
     </p>
   </div>
 </template>
+
+<script setup lang="ts">
+useSeoMeta({
+  title: "Contato · Magia Cristais",
+  description: "Fale com a equipe da Magia Cristais.",
+  robots: "noindex, follow",
+})
+</script>

@@ -22,7 +22,14 @@ export default defineNuxtConfig({
       ],
     },
   },
-  modules: ['@nuxtjs/color-mode', 'shadcn-nuxt', 'nuxt-lucide-icons', '@nuxt/image', '@nuxt/fonts'],
+  modules: ['@nuxtjs/color-mode', 'shadcn-nuxt', 'nuxt-lucide-icons', '@nuxt/image', '@nuxt/fonts', '@nuxtjs/sitemap'],
+  site: {
+    url: process.env.NUXT_PUBLIC_SITE_URL || 'https://magiacristais.com.br',
+    name: 'Magia Cristais',
+  },
+  sitemap: {
+    exclude: ['/admin/**', '/login', '/cadastro', '/minha-conta', '/minha-lista', '/identificar/**', '/contato'],
+  },
   css: ['~/assets/css/tailwind.css', 'vue-sonner/style.css'],
   vite: {
     plugins: [
@@ -67,6 +74,7 @@ export default defineNuxtConfig({
       cloudinaryCloudName: process.env.NUXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
       cloudinaryUploadPreset: process.env.NUXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
       turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY,
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://magiacristais.com.br',
     }
   }
 })

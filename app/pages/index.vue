@@ -406,15 +406,10 @@ const heroSparkles = [
   { id: 6, left: "90%", top: "45%", delay: "1.5s", duration: "3.6s" },
 ];
 
-useHead({
+useSeo({
   title: "Magia Cristais",
-  meta: [
-    {
-      name: "description",
-      content:
-        "Explore granadas, ametistas, rubis e dezenas de minerais — suas cores, composições e histórias, reunidos em um só lugar.",
-    },
-  ],
+  description:
+    "Explore granadas, ametistas, rubis e dezenas de minerais — suas cores, composições e histórias, reunidos em um só lugar.",
 });
 
 interface HomeData {

@@ -43,14 +43,9 @@
 import type { Category } from '~/composables/useCategoriesStore'
 import type { Mineral } from '~/composables/useMineralsStore'
 
-useHead({
+useSeo({
   title: 'Categorias · Magia Cristais',
-  meta: [
-    {
-      name: 'description',
-      content: 'Navegue pelas categorias de minerais e pedras naturais do catálogo.',
-    },
-  ],
+  description: 'Navegue pelas categorias de minerais e pedras naturais do catálogo.',
 })
 
 interface HomeData {

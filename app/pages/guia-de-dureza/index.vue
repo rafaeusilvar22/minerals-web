@@ -79,14 +79,9 @@
 </template>
 
 <script setup lang="ts">
-useHead({
+useSeo({
   title: "Guia de dureza · Magia Cristais",
-  meta: [
-    {
-      name: "description",
-      content: "Entenda a Escala de Mohs e como ela é usada para medir a dureza dos minerais.",
-    },
-  ],
+  description: "Entenda a Escala de Mohs e como ela é usada para medir a dureza dos minerais.",
 });
 
 interface MohsStep {

@@ -94,14 +94,9 @@
 </template>
 
 <script setup lang="ts">
-useHead({
+useSeo({
   title: 'Glossário · Magia Cristais',
-  meta: [
-    {
-      name: 'description',
-      content: 'Entenda os termos de mineralogia e cristaloterapia usados no catálogo de minerais.',
-    },
-  ],
+  description: 'Entenda os termos de mineralogia e cristaloterapia usados no catálogo de minerais.',
 })
 
 interface GlossaryTerm {

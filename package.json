@@ -17,6 +17,7 @@
     "@nuxt/fonts": "^0.14.0",
     "@nuxt/image": "^2.1.0",
     "@nuxtjs/color-mode": "^4.0.1",
+    "@nuxtjs/sitemap": "^8.3.4",
     "@tanstack/vue-table": "^9.0.0",
     "@tiptap/extension-link": "^3.29.2",
     "@tiptap/extension-placeholder": "^3.29.2",
