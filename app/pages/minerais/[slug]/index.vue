@@ -173,7 +173,14 @@ const { data: mineral, pending } = await useAsyncData(
 )
 
 if (!pending.value && !mineral.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Mineral não encontrado.', fatal: true })
+  const resolved = await $fetch<{ slug: string }>(`/api/minerals/resolve-slug/${slug}`).catch(() => null)
+
+  if (resolved?.slug) {
+    await navigateTo(`/minerais/${resolved.slug}`, { redirectCode: 301 })
+  }
+  else {
+    throw createError({ statusCode: 404, statusMessage: 'Mineral não encontrado.', fatal: true })
+  }
 }
 
 useSeo(() => ({
