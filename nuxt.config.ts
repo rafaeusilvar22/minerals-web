@@ -15,14 +15,14 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' },
         { rel: 'shortcut icon', href: '/favicon.ico' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
-        { rel: 'manifest', href: '/site.webmanifest' },
       ],
       meta: [
         { name: 'apple-mobile-web-app-title', content: 'Magia Cristais' },
+        { name: 'theme-color', content: '#926ec4' },
       ],
     },
   },
-  modules: ['@nuxtjs/color-mode', 'shadcn-nuxt', 'nuxt-lucide-icons', '@nuxt/image', '@nuxt/fonts', '@nuxtjs/sitemap'],
+  modules: ['@nuxtjs/color-mode', 'shadcn-nuxt', 'nuxt-lucide-icons', '@nuxt/image', '@nuxt/fonts', '@nuxtjs/sitemap', '@vite-pwa/nuxt'],
   site: {
     url: process.env.NUXT_PUBLIC_SITE_URL || 'https://magiacristais.com.br',
     name: 'Magia Cristais',
@@ -30,6 +30,32 @@ export default defineNuxtConfig({
   sitemap: {
     exclude: ['/admin/**', '/login', '/cadastro', '/minha-conta', '/minha-lista', '/identificar/**', '/contato'],
     sources: ['/api/__sitemap__/urls'],
+  },
+  pwa: {
+    registerType: 'autoUpdate',
+    manifest: {
+      name: 'Magia Cristais',
+      short_name: 'Magia Cristais',
+      description: 'Dicionário de minerais e cristais — propriedades físicas e místicas de cada pedra.',
+      lang: 'pt-BR',
+      start_url: '/',
+      display: 'standalone',
+      theme_color: '#926ec4',
+      background_color: '#ffffff',
+      icons: [
+        { src: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
+        { src: '/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
+      ],
+    },
+    workbox: {
+      // App shell only por enquanto: pré-cacheia os assets estáticos do build
+      // (JS/CSS/ícones/fontes), sem cachear respostas de /api/** (dados do
+      // Firestore) — evita servir catálogo desatualizado offline.
+      navigateFallback: null,
+    },
+    devOptions: {
+      enabled: false,
+    },
   },
   css: ['~/assets/css/tailwind.css', 'vue-sonner/style.css'],
   vite: {
