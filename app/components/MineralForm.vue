@@ -300,7 +300,7 @@
       <CardContent>
         <Textarea
           v-model="form.description"
-          placeholder="Conte um pouco sobre a origem, cor e curiosidades do mineral."
+          placeholder="Conte a essência mística da pedra — o que ela representa e sua energia. Pode fechar com um detalhe breve de origem ou composição."
           rows="4"
           required
         />

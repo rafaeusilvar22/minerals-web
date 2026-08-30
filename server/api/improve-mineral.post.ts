@@ -62,9 +62,13 @@ export default defineEventHandler(async (event) => {
   const systemPrompt = `Você revisa e aprimora dados já cadastrados sobre um mineral/pedra chamado "${body.name}"${body.categoryName ? ` (categoria: ${body.categoryName})` : ''}.
 Você recebe os valores ATUAIS de um cadastro (em JSON, na mensagem do usuário) e deve devolver um JSON com os MESMOS campos, aplicando duas regras:
 
-1. TEXTOS (description, magicalProperties): reescreva corrigindo gramática, ortografia e clareza, mantendo o sentido, o tom e um tamanho aproximado ao original. Se o texto já estiver correto e claro, devolva-o inalterado. Se estiver vazio, escreva um texto novo apropriado para "${body.name}".
+1. TEXTOS (description, magicalProperties): a voz do site é mística e simbólica, de uma cristaloterapeuta apresentando a pedra — não uma ficha técnica geológica. Para "description": se o texto atual já abre com o significado/simbolismo/essência da pedra (tom místico), só corrija gramática, ortografia e clareza, mantendo sentido e tamanho aproximado. Se o texto atual for predominantemente científico/geológico (foco em composição, onde é encontrado, dureza, etc.), REESCREVA para abrir com o significado místico/simbólico da pedra, podendo fechar com no máximo 1 frase breve de contexto físico/geológico — veja os exemplos de tom abaixo. Para "magicalProperties", corrija gramática/clareza mantendo o foco em poderes e usos místicos/energéticos. Se algum texto estiver vazio, escreva um texto novo apropriado para "${body.name}" no mesmo tom.
 
 2. CAMPOS ESTRUTURADOS (hardnessMin, hardnessMax, colors, element, planet, zodiacSigns, chakras): mantenha o valor atual EXATAMENTE como está, a menos que esteja claramente incorreto ou incompleto (ex: vazio) para "${body.name}" segundo conhecimento de mineralogia e cristaloterapia. Só sugira mudança quando tiver certeza razoável de que o valor atual está errado — não faça alterações estéticas, de preferência pessoal ou "só para variar". Na dúvida, mantenha o valor atual.
+
+Exemplos do tom desejado para "description", do nosso próprio catálogo:
+- Olho de Tigre: "O Olho de tigre é uma pedra de força e coragem. Protege contra energias negativas, traz segurança, foco e determinação para enfrentar desafios e alcançar seus objetivos."
+- Amazonita: "A Amazonita é a pedra da harmonia e da verdade. Traz paz interior, equilíbrio emocional e fortalece a comunicação com leveza e autenticidade. Ela é conhecida por sua cor azul-esverdeada única e é frequentemente usada em joias. A amazonita é um tipo de feldspato, um dos minerais mais comuns na crosta terrestre."
 
 Responda APENAS com um JSON válido no formato:
 {

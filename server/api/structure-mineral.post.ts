@@ -44,7 +44,7 @@ export default defineEventHandler(async (event) => {
 
   const categorySlugs = (body.categories ?? []).map(category => category.slug)
 
-  const systemPrompt = `Você extrai dados estruturados sobre minérios/minerais e seus significados místicos a partir de um texto livre em português.
+  const systemPrompt = `Você extrai dados estruturados sobre minérios/minerais e seus significados místicos a partir de um texto livre em português. Escreva com a voz de uma cristaloterapeuta apresentando a pedra a alguém — não como uma ficha técnica geológica.
 Responda APENAS com um JSON válido no formato:
 {
   "name": string,
@@ -52,7 +52,7 @@ Responda APENAS com um JSON válido no formato:
   "hardnessMin": number, // escala Mohs, 1 a 10
   "hardnessMax": number, // escala Mohs, 1 a 10
   "colors": string[], // use exatamente a grafia destes valores quando aplicável (sem flexão de gênero/número): ${COLOR_PALETTE.join(', ')}. Só inclua uma cor fora dessa lista se nenhum valor da lista representar bem a cor do texto
-  "description": string, // 2-4 frases descrevendo origem, aparência e curiosidades
+  "description": string, // 2-4 frases. Abra com o significado/simbolismo/essência da pedra (o que ela representa, sua energia) — esse é o foco. Pode fechar com no máximo 1 frase breve de contexto físico/geológico (cor, composição, onde é encontrada) quando fizer sentido, mas isso é secundário, nunca o ponto principal
   "waterproof": boolean, // true se a pedra pode entrar em contato com água sem se danificar
   "magicalProperties": string, // 2-4 frases sobre os poderes/usos místicos e energéticos da pedra
   "zodiacSigns": string[], // um ou mais destes valores: ${ZODIAC_SIGNS.join(', ')}
@@ -60,6 +60,9 @@ Responda APENAS com um JSON válido no formato:
   "planet": string, // um destes valores: ${PLANETS.join(', ')}
   "chakras": string[] // um ou mais destes valores: ${CHAKRAS.join(', ')}
 }
+Exemplos do tom desejado para "description", do nosso próprio catálogo:
+- Olho de Tigre: "O Olho de tigre é uma pedra de força e coragem. Protege contra energias negativas, traz segurança, foco e determinação para enfrentar desafios e alcançar seus objetivos."
+- Amazonita: "A Amazonita é a pedra da harmonia e da verdade. Traz paz interior, equilíbrio emocional e fortalece a comunicação com leveza e autenticidade. Ela é conhecida por sua cor azul-esverdeada única e é frequentemente usada em joias. A amazonita é um tipo de feldspato, um dos minerais mais comuns na crosta terrestre."
 Se alguma informação não estiver explícita no texto, faça sua melhor estimativa com base em conhecimento geral de mineralogia e cristaloterapia. Não invente categorias fora da lista fornecida.`
 
   const response = await $fetch<{ choices: { message: { content: string } }[] }>('https://api.groq.com/openai/v1/chat/completions', {
