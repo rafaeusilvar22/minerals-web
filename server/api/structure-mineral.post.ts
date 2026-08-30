@@ -78,7 +78,14 @@ Se alguma informação não estiver explícita no texto, faça sua melhor estima
       ],
     },
   }).catch((error) => {
-    throw createError({ statusCode: 502, statusMessage: 'Falha ao consultar a IA da Groq.', cause: error })
+    const groqStatus = error?.response?.status ?? error?.statusCode
+    const groqReason = error?.response?._data?.error?.message ?? error?.data?.error?.message ?? error?.message
+    console.error('[structure-mineral] Falha ao consultar a Groq:', groqStatus, groqReason)
+    throw createError({
+      statusCode: 502,
+      statusMessage: `Falha ao consultar a IA da Groq${groqStatus ? ` (${groqStatus})` : ''}${groqReason ? `: ${groqReason}` : '.'}`,
+      cause: error,
+    })
   })
 
   const content = response.choices?.[0]?.message?.content
