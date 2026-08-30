@@ -88,10 +88,11 @@ const html = ref('')
 
 // Syncs only until the initial fetch finishes — after that the form is the
 // source of truth, otherwise a late fetch would overwrite what the admin already typed.
-const stopSync = watch([content, initialized], ([value, ready]) => {
+let stopSync: (() => void) | undefined
+stopSync = watch([content, initialized], ([value, ready]) => {
   if (!ready) return
   html.value = value?.html ?? DRAFT_TEMPLATE
-  stopSync()
+  stopSync?.()
 }, { immediate: true })
 
 const saving = ref(false)

@@ -126,10 +126,11 @@ const aboutError = ref('')
 
 // Syncs only until the initial fetch finishes — after that the form is the
 // source of truth, otherwise a late fetch would overwrite what the admin already typed.
-const stopAboutSync = watch([aboutContent, aboutInitialized], ([value, ready]) => {
+let stopAboutSync: (() => void) | undefined
+stopAboutSync = watch([aboutContent, aboutInitialized], ([value, ready]) => {
   if (!ready) return
   aboutHtml.value = value?.html ?? ''
-  stopAboutSync()
+  stopAboutSync?.()
 }, { immediate: true })
 
 const activeMineral = computed(() => active.value ? getById(active.value.mineralId) : null)
