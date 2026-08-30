@@ -38,7 +38,7 @@ Public pages fetch data through `server/api/*` endpoints via `$fetch`/`useFetch`
 
 ### AI-assisted mineral data entry
 
-Two Nitro endpoints call the Groq API (`llama-3.3-70b-versatile`, JSON mode) using a server-only `groqApiKey` (never exposed to the client):
+Two Nitro endpoints call the Groq API (`openai/gpt-oss-120b`, JSON mode) using a server-only `groqApiKey` (never exposed to the client):
 
 - `POST /api/structure-mineral` — takes free-form text and the list of existing categories, returns a fully structured mineral record.
 - `POST /api/improve-mineral` — takes an already-structured mineral and asks the model to copy-edit the free-text fields (`description`, `magicalProperties`) and only correct structured fields (hardness, colors, element, planet, zodiac signs, chakras) when clearly wrong — not restyle them.
