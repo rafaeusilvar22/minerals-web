@@ -68,14 +68,18 @@
             <TableCell>
               <div class="flex flex-wrap gap-x-2 gap-y-1">
                 <template v-if="entry.candidates.length">
-                  <NuxtLink
-                    v-for="candidate in entry.candidates"
-                    :key="candidate.mineralId"
-                    :to="`/minerais/${getMineralSlug(candidate.mineralId)}`"
-                    class="text-sm font-medium text-foreground hover:text-gold"
-                  >
-                    {{ getMineralName(candidate.mineralId) }}
-                  </NuxtLink>
+                  <template v-for="candidate in entry.candidates" :key="candidate.mineralId">
+                    <NuxtLink
+                      v-if="getMineralById(candidate.mineralId)"
+                      :to="`/minerais/${getMineralSlug(candidate.mineralId)}`"
+                      class="text-sm font-medium text-foreground hover:text-gold"
+                    >
+                      {{ getMineralName(candidate.mineralId) }}
+                    </NuxtLink>
+                    <span v-else class="text-sm text-muted-foreground">
+                      {{ getMineralName(candidate.mineralId) }}
+                    </span>
+                  </template>
                 </template>
                 <span v-else-if="entry.status === 'failed'" class="text-sm text-destructive">
                   Não foi possível analisar essa foto

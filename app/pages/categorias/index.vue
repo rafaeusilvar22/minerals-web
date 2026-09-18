@@ -60,9 +60,11 @@ const categoriesWithCount = computed(() => {
   const minerals = home.value?.minerals ?? []
   const categories = home.value?.categories ?? []
 
-  return categories.map(category => ({
-    ...category,
-    count: minerals.filter(mineral => mineral.categorySlug === category.slug).length,
-  }))
+  return categories
+    .map(category => ({
+      ...category,
+      count: minerals.filter(mineral => mineral.categorySlug === category.slug).length,
+    }))
+    .filter(category => category.count > 0)
 })
 </script>
