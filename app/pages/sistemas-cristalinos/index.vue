@@ -19,23 +19,29 @@
         <div
           v-for="system in crystalSystems"
           :key="system.name"
-          class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-5"
+          class="flex gap-4 rounded-2xl border border-border bg-card p-5"
         >
-          <h2 class="text-card-name font-heading text-foreground">
-            {{ system.name }}
-          </h2>
-          <p class="text-sm text-muted-foreground">
-            {{ system.description }}
-          </p>
-          <div class="flex flex-wrap gap-1.5 pt-1">
-            <Badge
-              v-for="example in system.examples"
-              :key="example"
-              variant="outline"
-              class="h-auto rounded-full border-border bg-accent px-2.5 py-0.5 font-mono text-xs font-normal text-primary"
-            >
-              {{ example }}
-            </Badge>
+          <div class="flex size-20 shrink-0 items-center justify-center rounded-xl bg-accent">
+            <CrystalAxisDiagram :system="system.id" class="size-16" />
+          </div>
+
+          <div class="flex min-w-0 flex-1 flex-col gap-2">
+            <h2 class="text-card-name font-heading text-foreground">
+              {{ system.name }}
+            </h2>
+            <p class="text-sm text-muted-foreground">
+              {{ system.description }}
+            </p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <Badge
+                v-for="example in system.examples"
+                :key="example"
+                variant="outline"
+                class="h-auto rounded-full border-border bg-accent px-2.5 py-0.5 font-mono text-xs font-normal text-primary"
+              >
+                {{ example }}
+              </Badge>
+            </div>
           </div>
         </div>
       </div>
@@ -65,6 +71,7 @@ useSeo({
 })
 
 interface CrystalSystem {
+  id: 'cubico' | 'tetragonal' | 'ortorrombico' | 'hexagonal' | 'trigonal' | 'monoclinico' | 'triclinico'
   name: string
   description: string
   examples: string[]
@@ -72,36 +79,43 @@ interface CrystalSystem {
 
 const crystalSystems: CrystalSystem[] = [
   {
+    id: 'cubico',
     name: 'Cúbico (Isométrico)',
     description: 'Três eixos de mesmo tamanho, todos em ângulo reto entre si — a simetria mais regular, formando cubos e octaedros.',
     examples: ['Pirita', 'Granada', 'Fluorita', 'Diamante'],
   },
   {
+    id: 'tetragonal',
     name: 'Tetragonal',
     description: 'Dois eixos iguais e um terceiro mais curto ou mais longo, todos em ângulo reto.',
     examples: ['Zircão', 'Rutilo'],
   },
   {
+    id: 'ortorrombico',
     name: 'Ortorrômbico',
     description: 'Três eixos de tamanhos diferentes, todos ainda em ângulo reto entre si.',
     examples: ['Topázio', 'Peridoto', 'Andaluzita'],
   },
   {
+    id: 'hexagonal',
     name: 'Hexagonal',
     description: 'Quatro eixos: três de mesmo tamanho cruzando a 120° num mesmo plano, e um quarto perpendicular a eles.',
     examples: ['Berilo', 'Esmeralda', 'Água-marinha', 'Apatita'],
   },
   {
+    id: 'trigonal',
     name: 'Trigonal (Romboédrico)',
     description: 'Aparentado do sistema hexagonal, mas com simetria de três lados em vez de seis.',
     examples: ['Quartzo', 'Ametista', 'Citrino', 'Turmalina', 'Calcita'],
   },
   {
+    id: 'monoclinico',
     name: 'Monoclínico',
     description: 'Três eixos de tamanhos diferentes, com apenas dois ângulos retos entre eles.',
     examples: ['Gipsita', 'Ortoclásio', 'Azurita', 'Malaquita'],
   },
   {
+    id: 'triclinico',
     name: 'Triclínico',
     description: 'Três eixos de tamanhos diferentes, sem nenhum ângulo reto entre eles — a simetria mais baixa dos sete sistemas.',
     examples: ['Turquesa', 'Cianita', 'Labradorita'],
