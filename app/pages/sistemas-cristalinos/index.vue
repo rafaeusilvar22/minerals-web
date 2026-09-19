@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-10 py-8">
     <div class="flex flex-col gap-2">
-      <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+      <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
         Referência
       </span>
       <h1 class="text-section-title font-heading text-foreground">
@@ -19,7 +19,7 @@
         <div
           v-for="system in crystalSystems"
           :key="system.name"
-          class="flex gap-4 rounded-2xl border border-border bg-card p-5"
+          class="flex gap-4 rounded-lg border border-border bg-card p-5"
         >
           <div class="flex size-20 shrink-0 items-center justify-center rounded-xl bg-accent">
             <CrystalAxisDiagram :system="system.id" class="size-16" />

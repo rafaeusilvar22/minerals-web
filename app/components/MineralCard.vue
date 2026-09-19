@@ -16,7 +16,7 @@
         fit="cover"
         class="size-full object-cover"
       />
-      <span v-else class="text-eyebrow font-heading uppercase tracking-[0.13em] text-muted-foreground">
+      <span v-else class="text-eyebrow uppercase tracking-[0.13em] text-muted-foreground">
         Foto · {{ name }}
       </span>
 
@@ -24,14 +24,27 @@
     </div>
 
     <CardContent class="flex flex-col gap-2 p-4">
-      <div class="flex items-center gap-2">
-        <span class="size-2 shrink-0 rounded-full" :style="{ backgroundColor: dotColor }" />
-        <span class="text-card-name font-heading text-foreground">{{ name }}</span>
+      <span class="text-card-name font-heading text-foreground">{{ name }}</span>
+
+      <div v-if="categoryName" class="flex items-center gap-1.5">
+        <span class="size-1.5 shrink-0 rounded-full" :style="{ backgroundColor: dotColor }" />
+        <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">{{ categoryName }}</span>
       </div>
 
       <p class="text-card-description line-clamp-2 text-muted-foreground">
         {{ description }}
       </p>
+
+      <div v-if="chakras.length" class="flex flex-wrap gap-1.5 pt-1">
+        <Badge
+          v-for="chakra in chakras.slice(0, 4)"
+          :key="chakra"
+          variant="outline"
+          class="border-transparent bg-primary/10 text-primary"
+        >
+          {{ chakra }}
+        </Badge>
+      </div>
     </CardContent>
   </Card>
 </template>
@@ -43,7 +56,11 @@ withDefaults(defineProps<{
   description: string
   dotColor: string
   image?: string
+  categoryName?: string
+  chakras?: string[]
 }>(), {
   image: undefined,
+  categoryName: undefined,
+  chakras: () => [],
 })
 </script>

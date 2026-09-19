@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-screen flex-col">
+  <div class="site-shell flex min-h-screen flex-col bg-background text-foreground">
     <div class="pointer-events-none fixed inset-0 -z-10 hidden text-foreground/[0.05] dark:block" aria-hidden="true">
       <svg class="size-full" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -22,8 +22,11 @@
       :class="isScrolled ? 'bg-background/70 backdrop-blur-md' : 'bg-background'"
     >
       <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <NuxtLink to="/" class="flex items-center">
+        <NuxtLink to="/" class="flex items-center gap-2">
           <img src="/images/logo-magia-cristais.png" alt="Magia Cristais" class="size-8">
+          <span class="hidden font-heading text-lg uppercase tracking-[0.08em] text-foreground sm:inline">
+            Magia Cristais
+          </span>
         </NuxtLink>
 
         <NavigationMenu class="hidden md:flex">
@@ -37,6 +40,8 @@
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
+
+        <SiteSearch enable-shortcut class="hidden md:block md:w-56" />
 
         <div class="flex items-center gap-1">
           <DropdownMenu v-if="isMounted && user && ready" :modal="false">
@@ -111,6 +116,8 @@
                 <DrawerTitle>Menu</DrawerTitle>
               </DrawerHeader>
               <nav class="flex flex-col gap-1 px-4 pb-6">
+                <SiteSearch class="mb-3 w-full" />
+
                 <DrawerClose v-for="item in navItems" :key="item.to" as-child>
                   <NuxtLink
                     :to="item.to"
@@ -219,7 +226,7 @@
       <div class="mx-auto max-w-6xl px-4 py-12">
         <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div class="flex flex-col gap-2">
-            <div class="flex items-center gap-2 font-semibold text-foreground">
+            <div class="flex items-center gap-2 font-heading uppercase tracking-[0.08em] text-foreground">
               <img src="/images/logo-magia-cristais.png" alt="Magia Cristais" class="size-6">
               <span>Magia Cristais</span>
             </div>

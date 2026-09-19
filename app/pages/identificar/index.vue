@@ -16,7 +16,7 @@
 
     <div v-if="history.length" class="flex flex-col gap-3">
       <div class="flex items-center justify-between gap-4">
-        <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-muted-foreground">
+        <span class="text-eyebrow uppercase tracking-[0.13em] text-muted-foreground">
           Identificações recentes
         </span>
         <NuxtLink to="/identificar/historico" class="text-sm font-medium text-gold hover:text-primary">
@@ -152,6 +152,7 @@
                 :description="candidate.mineral.description"
                 :dot-color="candidate.mineral.dotColor"
                 :image="candidate.mineral.images[0]"
+                :category-name="getCategoryBySlug(candidate.mineral.categorySlug)?.name"
               />
             </NuxtLink>
             <div class="flex items-center gap-2">
@@ -196,6 +197,7 @@ const { identify, error: identifyError } = useMineralIdentification()
 const { remaining, refresh, recordUsage } = useIdentificationLimit()
 const { history, fetchHistory, addEntry, removeEntry } = useIdentificationHistory()
 const { getById: getMineralById } = useMineralsStore()
+const { getBySlug: getCategoryBySlug } = useCategoriesStore()
 
 // A busca já limita a 3, mas addEntry só prepende (sem truncar) — o slice
 // aqui garante que essa listagem "recentes" nunca cresça além de 3 mesmo

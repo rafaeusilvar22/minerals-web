@@ -7,7 +7,7 @@
 
 @theme inline {
     --font-sans: 'Geist', sans-serif;
-    --font-heading: 'Dosis', sans-serif;
+    --font-heading: var(--font-heading-family);
     --font-mono: 'Geist Mono', monospace;
 
     /* Escala tipográfica — ver design system */
@@ -91,6 +91,10 @@
 }
 
 :root {
+    /* Fonte de heading padrão (admin e qualquer contexto fora do .site-shell) —
+       o site público sobrescreve pra uma serifada dentro de .site-shell abaixo. */
+    --font-heading-family: 'Dosis', sans-serif;
+
     /* Acento quente — usado com moderação em destaques (mineral do dia, CTAs) */
     --gold: oklch(0.62 0.16 72);
     --gold-foreground: oklch(0.99 0.02 90);
@@ -168,6 +172,46 @@
     --sidebar-accent-foreground: oklch(0.95 0.015 305);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.68 0.14 302);
+}
+
+/* Redesign do site público — paleta creme/serifada escopada ao layout público
+   (app/layouts/default.vue), pra não vazar pro dashboard admin, que continua
+   usando a paleta lavanda de :root/.dark acima sem nenhuma alteração. */
+.site-shell {
+    --font-heading-family: 'Fraunces', serif;
+    --radius: 0.375rem;
+
+    --background: oklch(0.985 0.004 75);
+    --foreground: oklch(0.25 0.015 55);
+    --card: oklch(0.99 0.004 75);
+    --card-foreground: oklch(0.25 0.015 55);
+    --popover: oklch(0.99 0.004 75);
+    --popover-foreground: oklch(0.25 0.015 55);
+    --secondary: oklch(0.95 0.01 70);
+    --secondary-foreground: oklch(0.3 0.015 55);
+    --muted: oklch(0.95 0.01 70);
+    --muted-foreground: oklch(0.5 0.015 55);
+    --accent: oklch(0.93 0.035 80);
+    --accent-foreground: oklch(0.3 0.02 55);
+    --border: oklch(0.9 0.012 70);
+    --input: oklch(0.9 0.012 70);
+}
+
+.dark .site-shell {
+    --background: oklch(0.2 0.012 60);
+    --foreground: oklch(0.95 0.01 70);
+    --card: oklch(0.25 0.014 60);
+    --card-foreground: oklch(0.95 0.01 70);
+    --popover: oklch(0.25 0.014 60);
+    --popover-foreground: oklch(0.95 0.01 70);
+    --secondary: oklch(0.3 0.014 60);
+    --secondary-foreground: oklch(0.95 0.01 70);
+    --muted: oklch(0.3 0.014 60);
+    --muted-foreground: oklch(0.68 0.014 60);
+    --accent: oklch(0.32 0.03 70);
+    --accent-foreground: oklch(0.95 0.01 70);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
 }
 
 @layer base {

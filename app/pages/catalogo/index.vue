@@ -54,6 +54,8 @@
             :description="mineral.description"
             :dot-color="getCategoryBySlug(mineral.categorySlug)?.dotColor ?? 'var(--muted-foreground)'"
             :image="mineral.images[0]"
+            :category-name="getCategoryBySlug(mineral.categorySlug)?.name"
+            :chakras="mineral.chakras"
           />
         </NuxtLink>
       </div>

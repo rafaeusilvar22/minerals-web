@@ -24,7 +24,7 @@
 
     <template v-else>
       <div class="flex flex-col gap-4">
-        <h2 class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+        <h2 class="text-eyebrow uppercase tracking-[0.13em] text-primary">
           Já tenho
         </h2>
         <p v-if="!haveMinerals.length" class="text-body text-muted-foreground">
@@ -43,13 +43,15 @@
               :description="mineral.description"
               :dot-color="getCategory(mineral.categorySlug)?.dotColor ?? 'var(--muted-foreground)'"
               :image="mineral.images[0]"
+              :category-name="getCategory(mineral.categorySlug)?.name"
+              :chakras="mineral.chakras"
             />
           </NuxtLink>
         </div>
       </div>
 
       <div class="flex flex-col gap-4">
-        <h2 class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+        <h2 class="text-eyebrow uppercase tracking-[0.13em] text-primary">
           Quero ter
         </h2>
         <p v-if="!wantMinerals.length" class="text-body text-muted-foreground">
@@ -68,6 +70,8 @@
               :description="mineral.description"
               :dot-color="getCategory(mineral.categorySlug)?.dotColor ?? 'var(--muted-foreground)'"
               :image="mineral.images[0]"
+              :category-name="getCategory(mineral.categorySlug)?.name"
+              :chakras="mineral.chakras"
             />
           </NuxtLink>
         </div>

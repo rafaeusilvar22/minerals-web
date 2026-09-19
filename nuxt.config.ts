@@ -67,6 +67,7 @@ export default defineNuxtConfig({
     families: [
       { name: 'Geist', weights: [400, 500, 600, 700] },
       { name: 'Dosis' },
+      { name: 'Fraunces', weights: [400, 500, 600, 680, 700] },
     ],
   },
   image: {

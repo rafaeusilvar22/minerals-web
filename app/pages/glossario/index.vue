@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-10 py-8">
     <div class="flex flex-col gap-2">
-      <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+      <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
         Referência
       </span>
       <h1 class="text-section-title font-heading text-foreground">
@@ -45,7 +45,7 @@
         <div
           v-for="item in elements"
           :key="item.label"
-          class="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card p-4 text-center"
+          class="flex flex-col items-center gap-2 rounded-lg border border-border bg-card p-4 text-center"
         >
           <span class="flex size-12 items-center justify-center rounded-full border-2 border-border bg-card text-lg font-heading font-semibold text-foreground">
             {{ item.label[0] }}

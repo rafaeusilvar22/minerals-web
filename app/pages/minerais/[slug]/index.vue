@@ -54,7 +54,7 @@
             fit="cover"
             class="size-full object-cover"
           />
-          <span v-else class="text-eyebrow font-heading uppercase tracking-[0.13em] text-muted-foreground">
+          <span v-else class="text-eyebrow uppercase tracking-[0.13em] text-muted-foreground">
             Foto · {{ mineral.name }}
           </span>
         </div>
@@ -69,7 +69,7 @@
 
         <div class="grid grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-3">
           <div v-if="mineral.waterproof !== undefined" class="flex flex-col gap-1">
-            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+            <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
               À prova d'água
             </span>
             <p class="text-body text-muted-foreground">
@@ -77,7 +77,7 @@
             </p>
           </div>
           <div v-if="mineral.category" class="flex flex-col gap-1">
-            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+            <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
               Categoria
             </span>
             <p class="text-body text-muted-foreground">
@@ -85,7 +85,7 @@
             </p>
           </div>
           <div v-if="mineral.chakras?.length" class="flex flex-col gap-1">
-            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+            <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
               Chakra
             </span>
             <p class="text-body text-muted-foreground">
@@ -93,7 +93,7 @@
             </p>
           </div>
           <div v-if="mineral.colors?.length" class="flex flex-col gap-1">
-            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+            <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
               Cor
             </span>
             <p class="text-body text-muted-foreground">
@@ -101,7 +101,7 @@
             </p>
           </div>
           <div v-if="mineral.hardnessMin != null && mineral.hardnessMax != null" class="flex flex-col gap-1">
-            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+            <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
               Dureza
             </span>
             <p class="text-body text-muted-foreground">
@@ -109,7 +109,7 @@
             </p>
           </div>
           <div v-if="mineral.element" class="flex flex-col gap-1">
-            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+            <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
               Elemento
             </span>
             <p class="text-body text-muted-foreground">
@@ -117,7 +117,7 @@
             </p>
           </div>
           <div v-if="mineral.planet" class="flex flex-col gap-1">
-            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+            <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
               Planeta
             </span>
             <p class="text-body text-muted-foreground">
@@ -125,7 +125,7 @@
             </p>
           </div>
           <div v-if="mineral.zodiacSigns?.length" class="flex flex-col gap-1">
-            <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+            <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
               Signo
             </span>
             <p class="text-body text-muted-foreground">
@@ -135,7 +135,7 @@
         </div>
 
         <div v-if="mineral.magicalProperties" class="flex flex-col gap-1">
-          <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+          <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
             Propriedades mágicas
           </span>
           <p class="text-body text-muted-foreground">
@@ -144,7 +144,7 @@
         </div>
 
         <div class="flex flex-col gap-1">
-          <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+          <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
             Descrição
           </span>
           <p class="text-body text-muted-foreground">

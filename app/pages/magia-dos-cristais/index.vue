@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-10 py-8">
     <div class="flex flex-col gap-2">
-      <span class="text-eyebrow font-heading uppercase tracking-[0.13em] text-primary">
+      <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
         Espiritualidade
       </span>
       <h1 class="text-section-title font-heading text-foreground">
@@ -39,7 +39,7 @@
         <div
           v-for="item in dailyUses"
           :key="item.title"
-          class="flex flex-col gap-1.5 rounded-2xl border border-border bg-card p-5"
+          class="flex flex-col gap-1.5 rounded-lg border border-border bg-card p-5"
         >
           <h3 class="text-card-name font-heading text-foreground">
             {{ item.title }}
@@ -65,7 +65,7 @@
         <div
           v-for="room in roomGuides"
           :key="room.title"
-          class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-5"
+          class="flex flex-col gap-2 rounded-lg border border-border bg-card p-5"
         >
           <h3 class="text-card-name font-heading text-foreground">
             {{ room.title }}
@@ -101,7 +101,7 @@
           completa do mineral, com todas as suas propriedades físicas e místicas.
         </p>
       </div>
-      <div class="flex flex-col divide-y divide-border rounded-2xl border border-border bg-card">
+      <div class="flex flex-col divide-y divide-border rounded-lg border border-border bg-card">
         <NuxtLink
           v-for="intention in intentions"
           :key="intention.mineral.slug"
@@ -162,7 +162,7 @@
       </ul>
     </section>
 
-    <section class="flex flex-col gap-3 rounded-2xl border border-border bg-card p-6">
+    <section class="flex flex-col gap-3 rounded-lg border border-border bg-card p-6">
       <h2 class="text-mineral-title font-heading text-foreground">
         Encontre o cristal certo pra você
       </h2>
