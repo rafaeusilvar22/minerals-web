@@ -142,8 +142,8 @@
           </span>
         </div>
 
-        <div class="flex flex-wrap divide-x divide-border">
-          <div v-if="featuredMineral.waterproof !== undefined" class="flex flex-col gap-1 px-4 first:pl-0">
+        <div class="grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3">
+          <div v-if="featuredMineral.waterproof !== undefined" class="flex flex-col gap-1">
             <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
               À prova d'água
             </span>
@@ -151,7 +151,7 @@
               {{ featuredMineral.waterproof ? "Sim" : "Não" }}
             </p>
           </div>
-          <div v-if="featuredMineral.chakras?.length" class="flex flex-col gap-1 px-4 first:pl-0">
+          <div v-if="featuredMineral.chakras?.length" class="flex flex-col gap-1">
             <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
               Chakra
             </span>
@@ -159,7 +159,7 @@
               {{ featuredMineral.chakras.join(', ') }}
             </p>
           </div>
-          <div v-if="featuredMineral.colors?.length" class="flex flex-col gap-1 px-4 first:pl-0">
+          <div v-if="featuredMineral.colors?.length" class="flex flex-col gap-1">
             <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
               Cor
             </span>
@@ -167,7 +167,7 @@
               {{ featuredMineral.colors.join(', ') }}
             </p>
           </div>
-          <div v-if="featuredMineral.hardnessMin != null && featuredMineral.hardnessMax != null" class="flex flex-col gap-1 px-4 first:pl-0">
+          <div v-if="featuredMineral.hardnessMin != null && featuredMineral.hardnessMax != null" class="flex flex-col gap-1">
             <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
               Dureza
             </span>
@@ -175,7 +175,7 @@
               {{ formatHardness(featuredMineral) }} · Mohs
             </p>
           </div>
-          <div v-if="featuredMineral.element" class="flex flex-col gap-1 px-4 first:pl-0">
+          <div v-if="featuredMineral.element" class="flex flex-col gap-1">
             <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
               Elemento
             </span>
@@ -183,7 +183,7 @@
               {{ featuredMineral.element }}
             </p>
           </div>
-          <div v-if="featuredMineral.planet" class="flex flex-col gap-1 px-4 first:pl-0">
+          <div v-if="featuredMineral.planet" class="flex flex-col gap-1">
             <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
               Planeta
             </span>
@@ -191,7 +191,7 @@
               {{ featuredMineral.planet }}
             </p>
           </div>
-          <div v-if="featuredMineral.zodiacSigns?.length" class="flex flex-col gap-1 px-4 first:pl-0">
+          <div v-if="featuredMineral.zodiacSigns?.length" class="flex flex-col gap-1">
             <span class="text-eyebrow uppercase tracking-[0.13em] text-primary">
               Signo
             </span>
