@@ -309,6 +309,7 @@ const footerLinks = [
       { label: 'Glossário', to: '/glossario' },
       { label: 'Guia de dureza', to: '/guia-de-dureza' },
       { label: 'Sistemas cristalinos', to: '/sistemas-cristalinos' },
+      { label: 'A magia dos cristais', to: '/magia-dos-cristais' },
     ],
   },
   {
