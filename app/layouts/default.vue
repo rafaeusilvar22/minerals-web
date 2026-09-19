@@ -1,6 +1,6 @@
 <template>
   <div class="flex min-h-screen flex-col">
-    <div class="pointer-events-none fixed inset-0 -z-10 text-foreground/[0.05]" aria-hidden="true">
+    <div class="pointer-events-none fixed inset-0 -z-10 hidden text-foreground/[0.05] dark:block" aria-hidden="true">
       <svg class="size-full" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="mineral-bg-pattern" width="200" height="200" patternUnits="userSpaceOnUse">
