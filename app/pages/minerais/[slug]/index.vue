@@ -20,7 +20,7 @@
         <Carousel v-if="mineral.images.length > 1" class="w-full">
           <CarouselContent>
             <CarouselItem v-for="(image, index) in mineral.images" :key="image">
-              <div class="aspect-4/3 overflow-hidden rounded-2xl border border-border bg-muted">
+              <div class="group relative aspect-4/3 overflow-hidden rounded-2xl border border-border bg-muted">
                 <NuxtImg
                   provider="cloudinary"
                   :src="cloudinaryPath(image)"
@@ -30,16 +30,33 @@
                   fit="cover"
                   class="size-full object-cover"
                 />
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger as-child>
+                      <button
+                        type="button"
+                        class="absolute bottom-3 right-3 flex size-9 cursor-pointer items-center justify-center rounded-full bg-background/90 text-foreground shadow-md backdrop-blur-sm transition-opacity hover:bg-background sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+                        aria-label="Ampliar imagem"
+                        @click="openLightbox(index)"
+                      >
+                        <LucideExpand class="size-4" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      Ampliar imagem
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
             </CarouselItem>
           </CarouselContent>
-          <CarouselPrevious class="left-3 size-9 border-none bg-background/90 text-foreground shadow-md backdrop-blur-sm hover:bg-background" />
-          <CarouselNext class="right-3 size-9 border-none bg-background/90 text-foreground shadow-md backdrop-blur-sm hover:bg-background" />
+          <CarouselPrevious class="left-3 size-9 border-none bg-background/90 text-foreground shadow-md backdrop-blur-sm hover:bg-background dark:bg-background/90 dark:hover:bg-background" />
+          <CarouselNext class="right-3 size-9 border-none bg-background/90 text-foreground shadow-md backdrop-blur-sm hover:bg-background dark:bg-background/90 dark:hover:bg-background" />
         </Carousel>
 
         <div
           v-else
-          class="relative flex aspect-4/3 items-center justify-center overflow-hidden rounded-2xl border border-border bg-muted"
+          class="group relative flex aspect-4/3 items-center justify-center overflow-hidden rounded-2xl border border-border bg-muted"
           :style="!mineral.images.length ? {
             backgroundImage: 'repeating-linear-gradient(135deg, var(--accent) 0px, var(--accent) 1px, transparent 1px, transparent 14px)',
           } : undefined"
@@ -57,8 +74,70 @@
           <span v-else class="text-eyebrow uppercase tracking-[0.13em] text-muted-foreground">
             Foto · {{ mineral.name }}
           </span>
+          <TooltipProvider v-if="mineral.images.length">
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <button
+                  type="button"
+                  class="absolute bottom-3 right-3 flex size-9 cursor-pointer items-center justify-center rounded-full bg-background/90 text-foreground shadow-md backdrop-blur-sm transition-opacity hover:bg-background sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+                  aria-label="Ampliar imagem"
+                  @click="openLightbox(0)"
+                >
+                  <LucideExpand class="size-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                Ampliar imagem
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
+
+      <Dialog v-model:open="lightboxOpen">
+        <DialogContent class="max-w-[calc(100%-2rem)] border-none bg-transparent p-0 shadow-none sm:max-w-4xl" :show-close-button="false">
+          <VisuallyHidden as-child>
+            <DialogTitle>{{ mineral.name }} · foto ampliada</DialogTitle>
+          </VisuallyHidden>
+          <div class="relative">
+            <div class="flex aspect-square max-h-[85vh] w-full items-center justify-center overflow-hidden rounded-2xl bg-muted">
+              <NuxtImg
+                provider="cloudinary"
+                :src="cloudinaryPath(mineral.images[lightboxIndex])"
+                :alt="`${mineral.name} · foto ${lightboxIndex + 1}`"
+                width="1200"
+                class="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <DialogClose as-child>
+              <Button variant="ghost" size="icon-sm" class="absolute top-2 right-2 bg-background/90 text-foreground shadow-md backdrop-blur-sm hover:bg-background">
+                <LucideX class="size-4" />
+                <span class="sr-only">Fechar</span>
+              </Button>
+            </DialogClose>
+            <template v-if="mineral.images.length > 1">
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                class="absolute left-2 top-1/2 -translate-y-1/2 bg-background/90 text-foreground shadow-md backdrop-blur-sm hover:bg-background"
+                aria-label="Foto anterior"
+                @click="prevLightboxImage"
+              >
+                <LucideChevronLeft class="size-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                class="absolute right-2 top-1/2 -translate-y-1/2 bg-background/90 text-foreground shadow-md backdrop-blur-sm hover:bg-background"
+                aria-label="Próxima foto"
+                @click="nextLightboxImage"
+              >
+                <LucideChevronRight class="size-4" />
+              </Button>
+            </template>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <div class="flex flex-col items-start gap-4">
         <h1 class="text-mineral-title font-heading text-foreground">
@@ -159,6 +238,7 @@
 <script setup lang="ts">
 import type { Category } from '~/composables/useCategoriesStore'
 import type { Mineral } from '~/composables/useMineralsStore'
+import { VisuallyHidden } from 'reka-ui'
 
 interface MineralWithCategory extends Mineral {
   category: Category | null
@@ -166,6 +246,24 @@ interface MineralWithCategory extends Mineral {
 
 const route = useRoute()
 const slug = String(route.params.slug)
+
+const lightboxOpen = ref(false)
+const lightboxIndex = ref(0)
+
+function openLightbox(index: number) {
+  lightboxIndex.value = index
+  lightboxOpen.value = true
+}
+
+function nextLightboxImage() {
+  const total = mineral.value?.images.length ?? 0
+  if (total) lightboxIndex.value = (lightboxIndex.value + 1) % total
+}
+
+function prevLightboxImage() {
+  const total = mineral.value?.images.length ?? 0
+  if (total) lightboxIndex.value = (lightboxIndex.value - 1 + total) % total
+}
 
 const { data: mineral, pending } = await useAsyncData(
   `mineral-${slug}`,

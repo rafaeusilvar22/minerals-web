@@ -9,6 +9,7 @@
             :variant="status === 'have' ? 'default' : 'outline'"
             :aria-pressed="status === 'have'"
             class="shadow-sm backdrop-blur-sm"
+            :class="status !== 'have' && 'border-none bg-background/90 text-foreground hover:bg-background dark:bg-background/90 dark:hover:bg-background'"
             @click="handleToggle('have')"
           >
             <LucideCheck class="size-4" />
@@ -27,6 +28,7 @@
             :variant="status === 'want' ? 'default' : 'outline'"
             :aria-pressed="status === 'want'"
             class="shadow-sm backdrop-blur-sm"
+            :class="status !== 'want' && 'border-none bg-background/90 text-foreground hover:bg-background dark:bg-background/90 dark:hover:bg-background'"
             @click="handleToggle('want')"
           >
             <LucideHeart class="size-4" />
